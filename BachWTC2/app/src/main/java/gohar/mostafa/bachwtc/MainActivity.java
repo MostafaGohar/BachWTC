@@ -1,7 +1,10 @@
 package gohar.mostafa.bachwtc;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,38 +93,75 @@ public class MainActivity extends AppCompatActivity {
             View layout = inflater.inflate(R.layout.songs_page,container,false);
 
             GridLayout mGridLayout = layout.findViewById(R.id.gridLayout);
-            mGridLayout.setRowCount(12);
+            mGridLayout.setRowCount(6);
             mGridLayout.setColumnCount(4);
 
             Bundle bundle = getArguments();
             int bookNumber = bundle.getInt("position");
 
             for(int i = 0;i<6;i++){
-                ArrayList<String> songNames = new ArrayList<>();
                 for(int j = 0;j<4;j++){
-                    ImageView imageView = new ImageView(getContext());
-
+                    //Get actual count as if it were one loop
                     int x = (j+1) + (4*i);
 
+                    final LinearLayout linearLayout = new LinearLayout(getContext());
+                    LinearLayout l1 = new LinearLayout((getContext()));
+                    LinearLayout l2 = new LinearLayout((getContext()));
+                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                    ImageView imageView = new ImageView(getContext());
+                    TextView textView = new TextView(getContext());
 
                     imageView.setImageResource(getKeySignatureDrawable(getContext(),x,bookNumber));
 
-                    GridLayout.LayoutParams param = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 1f),      GridLayout.spec(GridLayout.UNDEFINED, 1f));
-                    imageView.setLayoutParams(param);
-
-                    mGridLayout.addView(imageView);
-                    songNames.add(getSongName(x, bookNumber));
-                }
-                for(int j = 0;j<4;j++){
-                    TextView textView = new TextView(getContext());
-                    textView.setText(songNames.get(j));
+                    textView.setText(getSongName(x, bookNumber));
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextColor(Color.BLACK);
 
-                    GridLayout.LayoutParams param = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 0.1f),      GridLayout.spec(GridLayout.UNDEFINED, 1f));
-                    textView.setLayoutParams(param);
-                    mGridLayout.addView(textView);
+                    l1.addView(imageView);
+                    l2.addView(textView);
+
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    linearLayout.setLayoutParams(lp);
+                    imageView.setLayoutParams(lp);
+                    textView.setLayoutParams(lp);
+                    LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0,0.8f);
+
+
+                    l1.setLayoutParams(lp1);
+                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0,0.2f);
+
+                    l2.setLayoutParams(lp2);
+
+
+                    linearLayout.addView(l1);
+                    linearLayout.addView(l2);
+                    GridLayout.LayoutParams param = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 1f),      GridLayout.spec(GridLayout.UNDEFINED, 1f));
+
+                    linearLayout.setLayoutParams(param);
+                    linearLayout.setPadding(20,20,20,20);
+
+                    TypedValue typedValue = new TypedValue();
+                    getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
+                    linearLayout.setBackgroundResource(typedValue.resourceId);
+                    linearLayout.setTag(bookNumber+"_"+x);
+                    linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.v("hey","yes"+linearLayout.getTag());
+                        }
+                    });
+                    mGridLayout.addView(linearLayout);
                 }
+//                for(int j = 0;j<4;j++){
+//                    TextView textView = new TextView(getContext());
+//                    textView.setText(songNames.get(j));
+//                    textView.setGravity(Gravity.CENTER);
+//                    textView.setTextColor(Color.BLACK);
+//
+//                    GridLayout.LayoutParams param = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 0.1f),      GridLayout.spec(GridLayout.UNDEFINED, 1f));
+//                    textView.setLayoutParams(param);
+//                    mGridLayout.addView(textView);
+//                }
 
             }
             return layout;
