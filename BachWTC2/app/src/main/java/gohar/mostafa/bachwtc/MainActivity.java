@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
 
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Book "+position;
+            return "Book "+(position+1);
         }
     }
 
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             mGridLayout.setColumnCount(4);
 
             Bundle bundle = getArguments();
-            int bookNumber = bundle.getInt("position");
+            int bookNumber = bundle.getInt("position")+1;
 
             for(int i = 0;i<6;i++){
                 for(int j = 0;j<4;j++){
@@ -109,13 +111,14 @@ public class MainActivity extends AppCompatActivity {
                     LinearLayout l2 = new LinearLayout((getContext()));
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
                     ImageView imageView = new ImageView(getContext());
-                    TextView textView = new TextView(getContext());
+                    AutoResizeTextView textView = new AutoResizeTextView(getContext());
 
                     imageView.setImageResource(getKeySignatureDrawable(getContext(),x,bookNumber));
 
                     textView.setText(getSongName(x, bookNumber));
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextColor(Color.BLACK);
+                    textView.setTypeface(Typeface.DEFAULT_BOLD);
 
                     l1.addView(imageView);
                     l2.addView(textView);
@@ -147,7 +150,16 @@ public class MainActivity extends AppCompatActivity {
                     linearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.v("hey","yes"+linearLayout.getTag());
+
+                            int bookNumber = Integer.parseInt(linearLayout.getTag().toString().split("_")[0]);
+                            int songNumber = Integer.parseInt(linearLayout.getTag().toString().split("_")[1]);
+                            Log.v("hey","yes"+bookNumber+"_"+songNumber);
+                            Intent intent = new Intent(getContext(), SongActivity.class);
+                            intent.putExtra("BOOK_NUMBER",bookNumber);
+                            intent.putExtra("SONG_NUMBER",songNumber);
+                            intent.putExtra("PRELUDE",true);
+                            startActivity(intent);
+
                         }
                     });
                     mGridLayout.addView(linearLayout);
@@ -172,14 +184,14 @@ public class MainActivity extends AppCompatActivity {
 
         int id;
         if(book == 0 && x == 8)
-            id = context.getResources().getIdentifier("joined", "drawable", context.getPackageName());
+            id = context.getResources().getIdentifier("ic_"+13, "drawable", context.getPackageName());
         else
             id = context.getResources().getIdentifier("ic_"+x, "drawable", context.getPackageName());
         return id;
     }
 
-    public static String getSongName(int x, int book){
-        switch(x){
+    public static String getSongName(int song, int book){
+        switch(song){
 
             case 1:return "C major";
             case 2:return "C minor";
@@ -188,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
             case 5:return "D major";
             case 6:return "D minor";
             case 7:return "E♭ major";
-            case 8: if(book == 0) return "E♭ minor \n/ D# minor"; else return "D# minor";
+            case 8: if(book == 0) return "E♭/D# minor"; else return "D# minor";
             case 9:return "E major";
             case 10:return "E minor";
             case 11:return "F major";
@@ -207,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             case 24:return "B minor";
 
         }
-        return ""+x;
+        return ""+song;
     }
 
 }
