@@ -20,8 +20,11 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,6 +43,8 @@ public class SongActivity extends AppCompatActivity {
     public int songNumber;
     public boolean isPrelude;
     public static SongActivity songActivity;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,10 +73,6 @@ public class SongActivity extends AppCompatActivity {
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(mViewPager);
-
-
-
-
 
 
 
@@ -151,7 +152,6 @@ public class SongActivity extends AppCompatActivity {
                     .enableDoubletap(true)
                     .defaultPage(0)
                     .enableAntialiasing(true)
-                    .scrollHandle(new DefaultScrollHandle(getContext()))
                     .load();
 
             return layout;
