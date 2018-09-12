@@ -1,6 +1,8 @@
 package gohar.mostafa.bachwtc;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
@@ -74,7 +77,7 @@ public class SongActivity extends AppCompatActivity {
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(mViewPager);
 
-
+        LinearLayout masterLayout = findViewById(R.id.masterLayout);
 
 
 
@@ -84,6 +87,7 @@ public class SongActivity extends AppCompatActivity {
 
 
     }
+
 
     class MyPagerAdapter extends FragmentPagerAdapter {
 

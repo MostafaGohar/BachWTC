@@ -1,6 +1,8 @@
 package gohar.mostafa.bachwtc;
 
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -31,6 +33,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -135,11 +138,11 @@ public class MainActivity extends AppCompatActivity {
             Drawable drawable;
             if(bookNumber == 1) {
                 drawable = mainActivity.resizeImage(R.drawable.wallz1);
-                containerLayout.setPadding(150,70,0,70);
+                containerLayout.setPadding(150,70,50,70);
             }
             else {
                 drawable = mainActivity.resizeImage(R.drawable.wallz2);
-                containerLayout.setPadding(50,70,150,70);
+                containerLayout.setPadding(80,70,150,70);
 
             }
             containerLayout.setBackground(drawable);
@@ -153,12 +156,14 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0;i<6;i++){
                 for(int j = 0;j<4;j++) {
                     //Get actual count as if it were one loop
-                    int x = (j + 1) + (4 * i);
 
                     final LinearLayout linearLayout = new LinearLayout(getContext());
-                    LinearLayout l1 = new LinearLayout((getContext()));
-                    LinearLayout l2 = new LinearLayout((getContext()));
+                    final LinearLayout l1 = new LinearLayout((getContext()));
+                    final LinearLayout l2 = new LinearLayout((getContext()));
                     final LinearLayout PFLayout = new LinearLayout(getContext());
+                    PFLayout.setTag("PFLayout_"+bookNumber+"_"+count);
+                    l1.setTag("keyLayout_"+bookNumber+"_"+count);
+                    Log.v("LMAO","PFLayout_"+bookNumber+"_"+count);
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
                     ImageView imageView = new ImageView(getContext());
                     AutoResizeTextView textView = new AutoResizeTextView(getContext());
@@ -167,18 +172,20 @@ public class MainActivity extends AppCompatActivity {
                     textView.setAlpha(0.7f);
 //                    Typeface face= ResourcesCompat.getFont(getContext(), R.font.font_4);
 //                    textView.setTypeface(face);
-                    imageView.setImageResource(getKeySignatureDrawable(getContext(), x, bookNumber));
+                    imageView.setImageResource(getKeySignatureDrawable(getContext(), count, bookNumber));
 
-                    textView.setText(getSongName(x, bookNumber));
+                    textView.setText(getSongName(count, bookNumber));
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextColor(Color.BLACK);
                     textView.setTypeface(Typeface.DEFAULT_BOLD);
 
-                    AutoResizeTextView preludeLayout = new AutoResizeTextView(getContext());
-                    AutoResizeTextView fugueLayout = new AutoResizeTextView(getContext());
+                    final AutoResizeTextView preludeLayout = new AutoResizeTextView(getContext());
+                    final AutoResizeTextView fugueLayout = new AutoResizeTextView(getContext());
 
                     preludeLayout.setTextColor(Color.WHITE);
-                    fugueLayout.setTextColor(Color.BLACK);
+                    fugueLayout.setTextColor(Color.WHITE);
+                    preludeLayout.setBackgroundColor(Color.DKGRAY);
+                    fugueLayout.setBackgroundColor(Color.GRAY);
                     preludeLayout.setText("P");
                     fugueLayout.setText("F");
                     fugueLayout.setGravity(Gravity.CENTER);
@@ -199,22 +206,21 @@ public class MainActivity extends AppCompatActivity {
                     preludeLayout.setLayoutParams(PFparams);
                     fugueLayout.setLayoutParams(PFparams);
 
-                    preludeLayout.setBackgroundColor(Color.BLACK);
-                    fugueLayout.setBackgroundColor(Color.WHITE);
+
+
 
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
                     linearLayout.setLayoutParams(lp);
-                    LinearLayout.LayoutParams PFlp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    LinearLayout.LayoutParams PFlp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0,0.8f);
                     masterLayout.setGravity(Gravity.CENTER);
                     PFLayout.setLayoutParams(PFlp);
                     PFLayout.setPadding(20, 20, 20, 20);
                     //masterLayout.setLayoutParams(lp);
                     masterLayout.addView(linearLayout);
-                    masterLayout.addView(PFLayout);
+                    //masterLayout.addView(PFLayout);
                     masterLayout.setLayoutParams(lp);
-                    masterLayout.setTag("master");
-                    PFLayout.setTag("pf");
+
 
 
                     imageView.setLayoutParams(lp);
@@ -227,8 +233,9 @@ public class MainActivity extends AppCompatActivity {
 
                     l2.setLayoutParams(lp2);
 
-
+                    linearLayout.setGravity(Gravity.CENTER);
                     linearLayout.addView(l1);
+                    linearLayout.addView(PFLayout);
                     linearLayout.addView(l2);
                     //TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -237,17 +244,30 @@ public class MainActivity extends AppCompatActivity {
                     //masterLayout.setLayoutParams(params);
                     //masterLayout.setPadding(20,20,20,20);
 
-                    TypedValue typedValue = new TypedValue();
-                    getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
-                    linearLayout.setBackgroundResource(typedValue.resourceId);
-                    linearLayout.setTag(bookNumber + "_" + x);
+                    //TypedValue typedValue = new TypedValue();
+                    //getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
+                    //linearLayout.setBackgroundResource(typedValue.resourceId);
+//                    linearLayout.setTag(bookNumber + "_" + count);
                     linearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
 
-                            //hideAll();
-                            linearLayout.setVisibility(View.GONE);
+                            refreshLayout(getActivity());
+                            l1.setVisibility(View.GONE);
+
                             PFLayout.setVisibility(View.VISIBLE);
+
+                            ValueAnimator widthAnimator = ValueAnimator.ofInt(0,((View)PFLayout.getParent()).getMeasuredWidth());
+                            widthAnimator.setDuration(300);
+                            widthAnimator.setInterpolator(new DecelerateInterpolator());
+                            widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animation) {
+                                    PFLayout.getLayoutParams().width = (int) animation.getAnimatedValue();
+                                    PFLayout.requestLayout();
+                                }
+                            });
+                            widthAnimator.start();
 
 
                         }
@@ -256,11 +276,10 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
 
-                            linearLayout.setVisibility(View.VISIBLE);
-                            PFLayout.setVisibility(View.GONE);
+                            refreshLayout(getActivity());
 
-                            int bookNumber = Integer.parseInt(linearLayout.getTag().toString().split("_")[0]);
-                            int songNumber = Integer.parseInt(linearLayout.getTag().toString().split("_")[1]);
+                            int bookNumber = Integer.parseInt(l1.getTag().toString().split("_")[1]);
+                            int songNumber = Integer.parseInt(l1.getTag().toString().split("_")[2]);
                             Log.v("hey", "yes" + bookNumber + "_" + songNumber);
                             Intent intent = new Intent(getContext(), SongActivity.class);
                             intent.putExtra("BOOK_NUMBER", bookNumber);
@@ -274,11 +293,10 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
 
-                            linearLayout.setVisibility(View.VISIBLE);
-                            PFLayout.setVisibility(View.GONE);
+                           refreshLayout(getActivity());
 
-                            int bookNumber = Integer.parseInt(linearLayout.getTag().toString().split("_")[0]);
-                            int songNumber = Integer.parseInt(linearLayout.getTag().toString().split("_")[1]);
+                            int bookNumber = Integer.parseInt(l1.getTag().toString().split("_")[1]);
+                            int songNumber = Integer.parseInt(l1.getTag().toString().split("_")[2]);
                             Log.v("hey", "yes" + bookNumber + "_" + songNumber);
                             Intent intent = new Intent(getContext(), SongActivity.class);
                             intent.putExtra("BOOK_NUMBER", bookNumber);
@@ -307,6 +325,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
             return layout;
+        }
+
+        public void refreshLayout(Activity activity){
+            for(int b = 1;b<3;b++) {
+                for (int i = 1; i < 25; i++) {
+
+
+                    activity.findViewById(R.id.drawer_layout).findViewWithTag("PFLayout_"+b+"_"+i).setVisibility(View.GONE);
+                    activity.findViewById(R.id.drawer_layout).findViewWithTag("keyLayout_"+b+"_"+i).setVisibility(View.VISIBLE);
+                }
+            }
         }
 
 
