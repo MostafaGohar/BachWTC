@@ -1,7 +1,10 @@
 package gohar.mostafa.bachwtc;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +37,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         mainActivity = this;
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
+//        toolbar = (Toolbar) findViewById(R.id.app_bar);
+//        toolbar.setTitle("");
+//        setSupportActionBar(toolbar);
 
 
         ViewPager mViewPager;
@@ -178,11 +183,11 @@ public class MainActivity extends AppCompatActivity {
 
             Drawable drawable;
             if(bookNumber == 1) {
-                drawable = mainActivity.resizeImage(R.drawable.wallz1);
+                drawable = mainActivity.resizeImage(R.drawable.wallz11);
 //               containerLayout.setPadding(150,70,50,70);
             }
             else {
-                drawable = mainActivity.resizeImage(R.drawable.wallz2);
+                drawable = mainActivity.resizeImage(R.drawable.wallz22);
 //                containerLayout.setPadding(80,70,150,70);
 
             }
@@ -223,13 +228,12 @@ public class MainActivity extends AppCompatActivity {
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
                     final ImageView imageView = new ImageView(getContext());
                     AutoResizeTextView textView = new AutoResizeTextView(getContext());
-
-                    Typeface type = Typeface.createFromAsset(getContext().getAssets(),"fonts/font_main_1.otf");
+                    Typeface type = Typeface.createFromAsset(getContext().getAssets(),"fonts/free_bi.ttf");
                     textView.setTypeface(type);
 
 
-//                    imageView.setAlpha(0.7f);
-//                    textView.setAlpha(0.7f);
+//                    imageView.setAlpha(0.8f);
+//                    textView.setAlpha(0.8f);
 //                    Typeface face= ResourcesCompat.getFont(getContext(), R.font.font_4);
 //                    textView.setTypeface(face);
                     imageView.post(new Runnable() {
@@ -242,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     imageView.setImageResource(getKeySignatureDrawable(getContext(), count, bookNumber));
+                    //imageView.setScaleType(ImageView.ScaleType.FIT_END);
 
                     textView.setText(getSongName(count, bookNumber));
                     textView.setGravity(Gravity.CENTER);
@@ -256,17 +261,20 @@ public class MainActivity extends AppCompatActivity {
 //                    preludeLayout.setBackgroundColor(Color.DKGRAY);
 //                    fugueLayout.setBackgroundColor(Color.GRAY);
                     preludeLayout.setText("P");
-                    preludeLayout.setTextSize(30);
-                    fugueLayout.setTextSize(30);
+//                    preludeLayout.setTextSize(50);
+//                    fugueLayout.setTextSize(50);
                     preludeLayout.setTextColor(Color.BLACK);
                     fugueLayout.setTextColor(Color.BLACK);
 
                     fugueLayout.setText("F");
                     fugueLayout.setGravity(Gravity.CENTER);
                     preludeLayout.setGravity(Gravity.CENTER);
-                    fugueLayout.setTypeface(type);
-                    preludeLayout.setTypeface(type);
 
+                    Typeface type1 = Typeface.createFromAsset(getContext().getAssets(),"fonts/corner.ttf");
+                    fugueLayout.setTypeface(type1);
+                    fugueLayout.setAlpha(0.7f);
+                    preludeLayout.setTypeface(type1);
+                    preludeLayout.setAlpha(0.7f);
 
                     l1.addView(imageView);
                     l2.addView(textView);
@@ -274,19 +282,21 @@ public class MainActivity extends AppCompatActivity {
                     PFLayout.setVisibility(View.GONE);
                     PFLayout.addView(preludeLayout);
                     PFLayout.addView(fugueLayout);
-                    PFLayout.setBackgroundResource(R.drawable.pf_back_1);
+                    //PFLayout.setBackgroundResource(R.drawable.pf_back_3);
 //                    PFLayout.setPadding(50,200,50,200);
 
-//                    PFLayout.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Log.v("ZZZZZZZZ",PFLayout.getHeight()+"_"+PFLayout.getWidth());
-//                            PFLayout.setPadding((int)(((View)PFLayout.getParent()).getHeight()*0.1)
-//                                    ,(int)(((View)PFLayout.getParent()).getHeight()*0.25)
-//                                    ,(int)(((View)PFLayout.getParent()).getHeight()*0.1)
-//                                    ,(int)(((View)PFLayout.getParent()).getHeight()*0.2));
-//                        }
-//                    });
+                    PFLayout.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.v("ZZZZZZZZ",PFLayout.getHeight()+"_"+PFLayout.getWidth());
+                            PFLayout.setPadding(0
+                                    ,(int)(((View)PFLayout.getParent()).getHeight()*0.08)
+                                    , 0
+                                    ,0);
+                            preludeLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/8);
+                            fugueLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/8);
+                        }
+                    });
 
                     final LinearLayout masterLayout = new LinearLayout(getContext());
 
@@ -346,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
                             PFLayout.setVisibility(View.VISIBLE);
 
                             ValueAnimator widthAnimator = ValueAnimator.ofInt(0,((View)PFLayout.getParent()).getMeasuredWidth());
-                            widthAnimator.setDuration(300);
+                            widthAnimator.setDuration(200);
                             widthAnimator.setInterpolator(new DecelerateInterpolator());
                             widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
@@ -415,13 +425,48 @@ public class MainActivity extends AppCompatActivity {
             return layout;
         }
 
-        public void refreshLayout(Activity activity){
+        public void refreshLayout(final Activity activity){
             for(int b = 1;b<3;b++) {
                 for (int i = 1; i < 25; i++) {
+                    View drawer = activity.findViewById(R.id.drawer_layout);
+                    final View PFLayout = drawer.findViewWithTag("PFLayout_"+b+"_"+i);
+                    final View keyLayout = drawer.findViewWithTag("keyLayout_"+b+"_"+i);
+                    if(PFLayout.getVisibility() == View.VISIBLE){
 
+                        ValueAnimator widthAnimator = ValueAnimator.ofInt(((View)PFLayout.getParent()).getMeasuredWidth(),0);
+                        final ValueAnimator widthAnimator2 = ValueAnimator.ofInt(0,10);
+                        widthAnimator.setDuration(100);
+                        widthAnimator.setInterpolator(new DecelerateInterpolator());
+                        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                PFLayout.getLayoutParams().width = (int) animation.getAnimatedValue();
+                                PFLayout.requestLayout();
+                            }
+                        });
+                        widthAnimator.addListener(new AnimatorListenerAdapter()
+                        {
+                            @Override
+                            public void onAnimationEnd(Animator animation)
+                            {
+                                widthAnimator2.setDuration(400);
+                                widthAnimator2.setInterpolator(new DecelerateInterpolator());
+                                widthAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                    @Override
+                                    public void onAnimationUpdate(ValueAnimator animation) {
+                                        keyLayout.setAlpha(((int)animation.getAnimatedValue()/10f));
+                                        keyLayout.requestLayout();
+                                    }
+                                });
+                                keyLayout.setVisibility(View.VISIBLE);
+                                PFLayout.setVisibility(View.GONE);
+                                widthAnimator2.start();
 
-                    activity.findViewById(R.id.drawer_layout).findViewWithTag("PFLayout_"+b+"_"+i).setVisibility(View.GONE);
-                    activity.findViewById(R.id.drawer_layout).findViewWithTag("keyLayout_"+b+"_"+i).setVisibility(View.VISIBLE);
+                            }
+                        });
+                        widthAnimator.start();
+                    }
+
                 }
             }
         }
@@ -449,7 +494,7 @@ public class MainActivity extends AppCompatActivity {
     public static int getKeySignatureDrawable(Context context, int x, int book){
 
         int id;
-        if(book == 0 && x == 8)
+        if(book == 1 && x == 8)
             id = context.getResources().getIdentifier("ic_"+13, "drawable", context.getPackageName());
         else
             id = context.getResources().getIdentifier("ic_"+x, "drawable", context.getPackageName());
@@ -458,7 +503,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String getSongName(int song, int book){
         switch(song){
-
+//FF03＃
             case 1:return "C major";
             case 2:return "C minor";
             case 3:return "C# major";

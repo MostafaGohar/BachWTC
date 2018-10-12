@@ -18,6 +18,18 @@
                                 <PersistentState>
                                   <option name="children">
                                     <map>
+                                      <entry key="clipArt">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="color" value="7e5b41" />
+                                                <entry key="paddingPercent" value="20" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="clipartAsset">
                                         <value>
                                           <PersistentState>
@@ -33,6 +45,8 @@
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="backgroundColor" value="7e5b41" />
+                                      <entry key="iconShape" value="NONE" />
                                       <entry key="outputName" value="ic_pause" />
                                     </map>
                                   </option>
@@ -65,8 +79,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_25" />
-                            <entry key="sourceFile" value="C:\Users\Gohar\Downloads\BachWTC2\app\src\main\res\drawable\25.svg" />
+                            <entry key="outputName" value="ic_mergedsvg" />
+                            <entry key="sourceFile" value="C:\Users\Gohar\Downloads\BachWTC2\app\src\main\res\drawable\mergedsvg.svg" />
                           </map>
                         </option>
                       </PersistentState>

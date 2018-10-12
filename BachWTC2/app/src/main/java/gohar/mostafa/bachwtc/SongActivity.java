@@ -7,6 +7,7 @@ import android.app.KeyguardManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfRenderer;
@@ -36,6 +37,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,7 +65,18 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
     private MediaPlayer mediaPlayer;
     private int mediaFileLength;
     private int realtimeLength;
-    final Handler handler = new Handler();
+    public Handler seekbarHandler =  new Handler();
+
+    public Handler mHandler =  new Handler();
+    public Runnable mRunnable;
+
+
+    ViewPager mViewPager;
+    SlidingTabLayout tabs;
+
+
+    private LinearLayout player;
+    private RelativeLayout masterLayout;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -76,6 +89,25 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
         bookNumber = (int) b.get("BOOK_NUMBER");
         songNumber = (int) b.get("SONG_NUMBER");
         isPrelude = (boolean) b.get("PRELUDE");
+        player = findViewById(R.id.player);
+        player.post(new Runnable() {
+            @Override
+            public void run() {
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    // In landscape
+                    player.setMinimumHeight(((View)player.getParent()).getHeight()/8);
+
+                } else {
+                    // In portrait
+                    player.setMinimumHeight(((View)player.getParent()).getHeight()/15);
+
+                }
+            }
+        });
+        masterLayout = findViewById(R.id.masterLayout);
+        mViewPager = findViewById(R.id.pager);
+        tabs = findViewById(R.id.tabs);
 
         songActivity = this;
 
@@ -94,6 +126,25 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
                 return false;
             }
         });
+        mHandler =new Handler();
+
+        mRunnable=new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                player.animate().translationY(player.getHeight());
+                tabs.animate().translationY(-tabs.getHeight());
+               // player.setVisibility(View.INVISIBLE); //This will remove the View. and free s the space occupied by the View
+            }
+        };
+        mHandler.postDelayed(mRunnable,2*1000);
+
+
+
+
+
+
         //textTimer = (TextView)findViewById(R.id.textTimer);
 
         btn_play_pause = (ImageButton) findViewById(R.id.btn_play_pause);
@@ -164,22 +215,19 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
 
 //        TextView textView = findViewById(R.id.textView);
 //        textView.setText(bookNumber+"_"+songNumber+"_"+isPrelude+"_"+MainActivity.getSongName(songNumber,bookNumber));
-        ViewPager mViewPager;
-        SlidingTabLayout tabs;
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+
+
+
         mViewPager.canScrollHorizontally(1);
         mViewPager.setAdapter(new SongActivity.MyPagerAdapter(getSupportFragmentManager()));
 
         // Assiging the Sliding Tab Layout View
-        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
         tabs.setDistributeEvenly(true);
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(mViewPager);
 
-        LinearLayout masterLayout = findViewById(R.id.masterLayout);
 
 
 
@@ -189,7 +237,19 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
 
 
     }
+//     player.setVisibility(View.VISIBLE);
+//                mHandler.removeCallbacksAndMessages(null);
+//                mHandler.postDelayed(mRunnable, 3 * 1000);
+//                return false;
 
+    public void onUserInteraction(){
+        super.onUserInteraction();
+        player.animate().translationY(0);
+        tabs.animate().translationY(0);
+
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.postDelayed(mRunnable, 3 * 1000);
+    }
     private String getSongUrl(int bookNumber, int songNumber, boolean isPrelude) {
 
         String songName = bookNumber+"_"+songNumber+"_";
@@ -358,7 +418,7 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
                 }
 
             };
-            handler.postDelayed(updater,1000); // 1 second
+            seekbarHandler.postDelayed(updater,1000); // 1 second
         }
     }
 
