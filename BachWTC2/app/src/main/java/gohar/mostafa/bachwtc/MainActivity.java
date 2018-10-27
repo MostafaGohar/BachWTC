@@ -8,6 +8,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,6 +31,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.transition.Visibility;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        adjustFontScale(getResources().getConfiguration());
         count = 1;
 
 
@@ -85,49 +88,9 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            public void onPageScrollStateChanged(int state) {
-//                tabs.setVisibility(View.VISIBLE);
-//                hideTabs(tabs);
-//            }
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//                tabs.setVisibility(View.VISIBLE);
-//                hideTabs(tabs);
-//            }
-//
-//            public void onPageSelected(int position) {
-//                // Check if this is the page you want.
-//            }
-//        });
-//
-//        hideTabs(tabs);
-
-//        tabs.setDistributeEvenly(true);
-//
-//        // Setting the ViewPager For the SlidingTabsLayout
-//        tabs.setViewPager(mViewPager);
     }
 
-//    public void hideTabs(final View tabs){
-//        Thread thread = new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(3000);
-//                } catch (InterruptedException e) {
-//                }
-//
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tabs.setVisibility(View.GONE);
-//                    }
-//                });
-//            }
-//        };
-//        thread.start(); //start the thread
-//    }
+
     class MyPagerAdapter extends FragmentPagerAdapter{
 
         public MyPagerAdapter(FragmentManager fm) {
@@ -272,9 +235,9 @@ public class MainActivity extends AppCompatActivity {
 
                     Typeface type1 = Typeface.createFromAsset(getContext().getAssets(),"fonts/corner.ttf");
                     fugueLayout.setTypeface(type1);
-                    fugueLayout.setAlpha(0.7f);
+                    //fugueLayout.setAlpha(0.7f);
                     preludeLayout.setTypeface(type1);
-                    preludeLayout.setAlpha(0.7f);
+                    //preludeLayout.setAlpha(0.7f);
 
                     l1.addView(imageView);
                     l2.addView(textView);
@@ -293,8 +256,8 @@ public class MainActivity extends AppCompatActivity {
                                     ,(int)(((View)PFLayout.getParent()).getHeight()*0.08)
                                     , 0
                                     ,0);
-                            preludeLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/8);
-                            fugueLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/8);
+                            preludeLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/9);
+                            fugueLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/9);
                         }
                     });
 
@@ -349,25 +312,26 @@ public class MainActivity extends AppCompatActivity {
                     linearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                             refreshLayout(getActivity());
-                            l1.setVisibility(View.GONE);
+                            if(PFLayout.getVisibility() != View.VISIBLE) {
 
-                            PFLayout.setVisibility(View.VISIBLE);
+                                l1.setVisibility(View.GONE);
 
-                            ValueAnimator widthAnimator = ValueAnimator.ofInt(0,((View)PFLayout.getParent()).getMeasuredWidth());
-                            widthAnimator.setDuration(200);
-                            widthAnimator.setInterpolator(new DecelerateInterpolator());
-                            widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                @Override
-                                public void onAnimationUpdate(ValueAnimator animation) {
-                                    PFLayout.getLayoutParams().width = (int) animation.getAnimatedValue();
-                                    PFLayout.requestLayout();
-                                }
-                            });
-                            widthAnimator.start();
+                                PFLayout.setVisibility(View.VISIBLE);
 
+                                ValueAnimator widthAnimator = ValueAnimator.ofInt(0, ((View) PFLayout.getParent()).getMeasuredWidth());
+                                widthAnimator.setDuration(200);
+                                widthAnimator.setInterpolator(new DecelerateInterpolator());
+                                widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                    @Override
+                                    public void onAnimationUpdate(ValueAnimator animation) {
+                                        PFLayout.getLayoutParams().width = (int) animation.getAnimatedValue();
+                                        PFLayout.requestLayout();
+                                    }
+                                });
+                                widthAnimator.start();
 
+                            }
                         }
                     });
                     preludeLayout.setOnClickListener(new View.OnClickListener() {
@@ -424,6 +388,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return layout;
         }
+
 
         public void refreshLayout(final Activity activity){
             for(int b = 1;b<3;b++) {
@@ -489,6 +454,19 @@ public class MainActivity extends AppCompatActivity {
             }
             return views;
         }
+    }
+    public void adjustFontScale(Configuration configuration) {
+        Log.v("zappy", configuration.fontScale+"");
+        //if (configuration.fontScale > 1.30) {
+//                LogUtil.log(LogUtil.WARN, TAG, "fontScale=" + configuration.fontScale); //Custom Log class, you can use Log.w
+//                LogUtil.log(LogUtil.WARN, TAG, "font too big. scale down..."); //Custom Log class, you can use Log.w
+            configuration.fontScale = (float) 1.0;
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            WindowManager wm = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
+            wm.getDefaultDisplay().getMetrics(metrics);
+            metrics.scaledDensity = configuration.fontScale * metrics.density;
+            getApplicationContext().getResources().updateConfiguration(configuration, metrics);
+        //}
     }
 
     public static int getKeySignatureDrawable(Context context, int x, int book){

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +36,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -52,7 +56,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
-public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBufferingUpdateListener,MediaPlayer.OnCompletionListener{
+import me.imid.swipebacklayout.lib.SwipeBackLayout;
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
+
+import static android.app.Notification.DEFAULT_ALL;
+import static android.app.Notification.DEFAULT_VIBRATE;
+import static android.app.Notification.EXTRA_NOTIFICATION_ID;
+
+public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBufferingUpdateListener,MediaPlayer.OnCompletionListener{
+
+    boolean isPlaying;
 
     public int bookNumber;
     public int songNumber;
@@ -83,13 +96,20 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_song);
+
+
+
         Intent intent= getIntent();
         Bundle b = intent.getExtras();
         bookNumber = (int) b.get("BOOK_NUMBER");
         songNumber = (int) b.get("SONG_NUMBER");
         isPrelude = (boolean) b.get("PRELUDE");
-        player = findViewById(R.id.player);
+        player = (LinearLayout) findViewById(R.id.player);
+        //SET PLAYER SIZE BASED ON PORTRAIT OR LANDSCAPE MODE
         player.post(new Runnable() {
             @Override
             public void run() {
@@ -97,21 +117,24 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     // In landscape
                     player.setMinimumHeight(((View)player.getParent()).getHeight()/8);
-
+                    getSwipeBackLayout().setSensitivity(getApplicationContext(),0f);
                 } else {
                     // In portrait
                     player.setMinimumHeight(((View)player.getParent()).getHeight()/15);
-
+                    getSwipeBackLayout().setSensitivity(getApplicationContext(),1f);
                 }
             }
         });
-        masterLayout = findViewById(R.id.masterLayout);
-        mViewPager = findViewById(R.id.pager);
-        tabs = findViewById(R.id.tabs);
+        masterLayout = (RelativeLayout) findViewById(R.id.masterLayout);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
 
+        getSwipeBackLayout().setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        //getSwipeBackLayout().setEdgeSize(1000);
+//        getSwipeBackLayout().setSensitivity(getApplicationContext(),1f);
         songActivity = this;
 
-        seekBar = (SeekBar)findViewById(R.id.seekbar);
+        seekBar = (SeekBar) findViewById(R.id.seekbar);
         seekBar.setMax(99); // 100% (0~99)
         seekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -185,13 +208,36 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
                     @Override
                     protected void onPostExecute(String s) {
 
+//                        Intent snoozeIntent = new Intent(getApplicationContext(), SongActivity.class);
+//                        snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
+//                        PendingIntent snoozePendingIntent =
+//                                PendingIntent.getBroadcast(getApplicationContext(), 0, snoozeIntent, 0);
+//
+//
+//                                      //  .setContentIntent(); //Required on Gingerbread and below
+//                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "1")
+//                                .setSmallIcon(R.mipmap.ic_pause)
+//                                .setContentTitle("Book "+bookNumber+", ")
+//                                .setContentText("Hello World!")
+//                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//                                .addAction(R.mipmap.ic_pause, "Pause",
+//                                        snoozePendingIntent);
+//
+//                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//                        assert notificationManager != null;
+//                        notificationManager.notify(1, mBuilder.build());
+//                                //.setContentIntent(pendingIntent)
+//                                //.addAction(R.drawable.ic_snooze, getString(R.string.snooze),
+//                                //        snoozePendingIntent);
                         if(!mediaPlayer.isPlaying())
                         {
+                            isPlaying = true;
                             mediaPlayer.start();
                             btn_play_pause.setImageResource(R.mipmap.ic_pause);
                         }
                         else
                         {
+                            isPlaying = false;
                             mediaPlayer.pause();
                             btn_play_pause.setImageResource(R.mipmap.ic_play);
                         }
@@ -200,6 +246,8 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
                         mDialog.dismiss();
                     }
                 };
+
+
 
                 mp3Play.execute(getSongUrl(bookNumber,songNumber,isPrelude)); // direct link mp3 file
             }
@@ -248,7 +296,7 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
         tabs.animate().translationY(0);
 
         mHandler.removeCallbacksAndMessages(null);
-        mHandler.postDelayed(mRunnable, 3 * 1000);
+        mHandler.postDelayed(mRunnable, 2 * 1000);
     }
     private String getSongUrl(int bookNumber, int songNumber, boolean isPrelude) {
 
@@ -371,6 +419,7 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
         super.onPause();
 
 
+        Log.v("RESSSSSSSSSSSS","SSSSSSSSSSSSSSSSSSS");
         if(mediaPlayer != null && mediaPlayer.isPlaying())
         {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -383,13 +432,39 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
             }
 
             if (screenOn) {
-                btn_play_pause.performClick();
+                //btn_play_pause.performClick();
+                isPlaying = true;
                 // Screen is still on, so do your thing here
             }
             //mediaPlayer.pause();
         }
 
     }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.v("XXXXXXXXXXXXXXX",mediaPlayer.getCurrentPosition()+"A");
+        if(isPlaying){
+            btn_play_pause.setImageResource(R.mipmap.ic_pause);
+        }
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
+    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Log.v("REZzzzzzzzzzzzzzZS","SSSSSSSSSSSSSSSSSSS");
+//
+//        if(isPlaying){
+//            btn_play_pause.performClick();
+//
+//        }
+//    }
 
     private void updateSeekBar() {
         seekBar.setProgress((int)(((float)mediaPlayer.getCurrentPosition() / mediaFileLength)*100));
