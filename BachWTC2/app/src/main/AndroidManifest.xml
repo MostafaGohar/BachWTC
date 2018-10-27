@@ -19,10 +19,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Book1" />
-        <activity android:name=".Book2" />
-        <activity android:name=".BookActivity" />
-        <activity android:name=".SongActivity"></activity>
+        <activity android:name=".Book1"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity android:name=".Book2"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity android:name=".BookActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity android:name=".SongActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
     </application>
 
 </manifest>

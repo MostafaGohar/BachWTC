@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfRenderer;
 import android.media.MediaPlayer;
@@ -30,6 +31,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayout;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,6 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnDrawListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 
@@ -54,6 +57,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
@@ -63,9 +67,13 @@ import static android.app.Notification.DEFAULT_ALL;
 import static android.app.Notification.DEFAULT_VIBRATE;
 import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 
-public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBufferingUpdateListener,MediaPlayer.OnCompletionListener{
+public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBufferingUpdateListener,MediaPlayer.OnCompletionListener{
 
     boolean isPlaying;
+    public ArrayList<PDFView> pdfViews = new ArrayList<PDFView>();
+
+    public static int deviceWidth;
+    public static int deviceHeight;
 
     public int bookNumber;
     public int songNumber;
@@ -102,6 +110,12 @@ public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBuf
         setContentView(R.layout.activity_song);
 
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        deviceWidth = size.x;
+        deviceHeight = size.y;
+
 
         Intent intent= getIntent();
         Bundle b = intent.getExtras();
@@ -117,11 +131,9 @@ public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBuf
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     // In landscape
                     player.setMinimumHeight(((View)player.getParent()).getHeight()/8);
-                    getSwipeBackLayout().setSensitivity(getApplicationContext(),0f);
                 } else {
                     // In portrait
                     player.setMinimumHeight(((View)player.getParent()).getHeight()/15);
-                    getSwipeBackLayout().setSensitivity(getApplicationContext(),1f);
                 }
             }
         });
@@ -129,10 +141,9 @@ public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBuf
         mViewPager = (ViewPager) findViewById(R.id.pager);
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
 
-        getSwipeBackLayout().setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        //getSwipeBackLayout().setEdgeSize(1000);
-//        getSwipeBackLayout().setSensitivity(getApplicationContext(),1f);
+
         songActivity = this;
+        mediaPlayer = new MediaPlayer();
 
         seekBar = (SeekBar) findViewById(R.id.seekbar);
         seekBar.setMax(99); // 100% (0~99)
@@ -231,13 +242,11 @@ public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBuf
 //                                //        snoozePendingIntent);
                         if(!mediaPlayer.isPlaying())
                         {
-                            isPlaying = true;
                             mediaPlayer.start();
                             btn_play_pause.setImageResource(R.mipmap.ic_pause);
                         }
                         else
                         {
-                            isPlaying = false;
                             mediaPlayer.pause();
                             btn_play_pause.setImageResource(R.mipmap.ic_play);
                         }
@@ -250,10 +259,12 @@ public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBuf
 
 
                 mp3Play.execute(getSongUrl(bookNumber,songNumber,isPrelude)); // direct link mp3 file
-            }
-        });
 
-        mediaPlayer = new MediaPlayer();
+        }}
+        );
+
+
+
         mediaPlayer.setOnBufferingUpdateListener(this);
         mediaPlayer.setOnCompletionListener(this);
 
@@ -432,41 +443,33 @@ public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBuf
             }
 
             if (screenOn) {
-                //btn_play_pause.performClick();
-                isPlaying = true;
+                btn_play_pause.performClick();
+
                 // Screen is still on, so do your thing here
             }
-            //mediaPlayer.pause();
         }
 
     }
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.v("XXXXXXXXXXXXXXX",mediaPlayer.getCurrentPosition()+"A");
-        if(isPlaying){
-            btn_play_pause.setImageResource(R.mipmap.ic_pause);
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+            for(int i = 0 ;i<pdfViews.size();i++){
+                pdfViews.get(i).zoomTo((deviceHeight*1f)/(deviceWidth*1f)+0.3f);
+            }
+            Log.e("On Config Change","LANDSCAPE");
+        }else{
+            for(int i = 0 ;i<pdfViews.size();i++){
+                pdfViews.get(i).resetZoom();
+            }
+            Log.e("On Config Change","PORTRAIT");
         }
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
-        }
     }
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Log.v("REZzzzzzzzzzzzzzZS","SSSSSSSSSSSSSSSSSSS");
-//
-//        if(isPlaying){
-//            btn_play_pause.performClick();
-//
-//        }
-//    }
+
 
     private void updateSeekBar() {
+        Log.v("XXXXXXXXXXXXXXXXXXXXXX",(int)(((float)mediaPlayer.getCurrentPosition() / mediaFileLength)*100)+"");
         seekBar.setProgress((int)(((float)mediaPlayer.getCurrentPosition() / mediaFileLength)*100));
         if(mediaPlayer.isPlaying())
         {
@@ -512,10 +515,29 @@ public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBuf
 
     }
 
-
-
+//
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState)
+//    {
+//        outState.putInt("position", mediaPlayer.getCurrentPosition());
+//        mediaPlayer.pause();
+//        super.onSaveInstanceState(outState);
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState)
+//    {
+//        int pos = savedInstanceState.getInt("position");
+//        mediaPlayer.seekTo(pos);
+//        seekBar.setProgress((int)(((float)pos / mediaFileLength)*100));
+//        if(isPlaying){
+//            btn_play_pause.setImageResource(R.mipmap.ic_pause);
+//        }
+//        super.onRestoreInstanceState(savedInstanceState);
+//    }
 
     class MyPagerAdapter extends FragmentPagerAdapter {
+
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -562,6 +584,7 @@ public class SongActivity extends SwipeBackActivity implements MediaPlayer.OnBuf
             boolean isPrelude = bundle.getBoolean("PRELUDE");
             int position = bundle.getInt("position");
             final PDFView pdfView = layout.findViewById(R.id.pdfView);
+            songActivity.pdfViews.add(pdfView);
             String song = songNumber+"";
 
             String path;

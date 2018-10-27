@@ -195,8 +195,8 @@ public class MainActivity extends AppCompatActivity {
                     textView.setTypeface(type);
 
 
-//                    imageView.setAlpha(0.8f);
-//                    textView.setAlpha(0.8f);
+                    imageView.setAlpha(0.8f);
+                    textView.setAlpha(0.8f);
 //                    Typeface face= ResourcesCompat.getFont(getContext(), R.font.font_4);
 //                    textView.setTypeface(face);
                     imageView.post(new Runnable() {
@@ -235,9 +235,9 @@ public class MainActivity extends AppCompatActivity {
 
                     Typeface type1 = Typeface.createFromAsset(getContext().getAssets(),"fonts/corner.ttf");
                     fugueLayout.setTypeface(type1);
-                    //fugueLayout.setAlpha(0.7f);
+                    fugueLayout.setAlpha(0.7f);
                     preludeLayout.setTypeface(type1);
-                    //preludeLayout.setAlpha(0.7f);
+                    preludeLayout.setAlpha(0.7f);
 
                     l1.addView(imageView);
                     l2.addView(textView);
