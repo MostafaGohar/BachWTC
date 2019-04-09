@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -99,6 +100,20 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
     private LinearLayout player;
     private RelativeLayout masterLayout;
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mediaPlayer.stop();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.reset();
+    }
+
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -189,17 +204,32 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
 
             @Override
             public void onClick(View v) {
-                final ProgressDialog mDialog = new ProgressDialog(SongActivity.this);
+                @SuppressLint("StaticFieldLeak") final AsyncTask<String,String,String> mp3Play = new AsyncTask<String, String, String>() {
 
+                    final ProgressDialog mDialog = ProgressDialog.show(
+                            SongActivity.this,
+                            "Loading...",
+                            "This may take a few seconds.",
+                            true,
+                            true,
+                            new DialogInterface.OnCancelListener(){
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    cancel(true);
+                                    //finish();
+                                }
+                            }
+                    );
 
-                @SuppressLint("StaticFieldLeak") AsyncTask<String,String,String> mp3Play = new AsyncTask<String, String, String>() {
 
                     @Override
                     protected void onPreExecute() {
-                        mDialog.setMessage("Loading");
-                        mDialog.show();
+
+//                        mDialog.setMessage("Loading");
+//                        mDialog.show();
                     }
 
+                    @SuppressLint("WrongThread")
                     @Override
                     protected String doInBackground(String... params) {
                         try{
@@ -213,7 +243,7 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
                         {
 
                         }
-                        return "";
+                        return null;
                     }
 
                     @Override
@@ -255,7 +285,6 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
                         mDialog.dismiss();
                     }
                 };
-
 
 
                 mp3Play.execute(getSongUrl(bookNumber,songNumber,isPrelude)); // direct link mp3 file

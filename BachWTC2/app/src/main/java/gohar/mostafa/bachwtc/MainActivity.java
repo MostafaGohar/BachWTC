@@ -256,8 +256,8 @@ public class MainActivity extends AppCompatActivity {
                                     ,(int)(((View)PFLayout.getParent()).getHeight()*0.08)
                                     , 0
                                     ,0);
-                            preludeLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/9);
-                            fugueLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/9);
+                            preludeLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/11);
+                            fugueLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/11);
                         }
                     });
 
