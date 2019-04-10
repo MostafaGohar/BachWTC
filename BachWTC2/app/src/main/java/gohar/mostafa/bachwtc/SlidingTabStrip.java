@@ -21,6 +21,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -31,7 +32,7 @@ class SlidingTabStrip extends LinearLayout {
     private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 0;
     private static final byte DEFAULT_BOTTOM_BORDER_COLOR_ALPHA = 0x26;
     private static final int SELECTED_INDICATOR_THICKNESS_DIPS = 10;
-    private static final int DEFAULT_SELECTED_INDICATOR_COLOR = 0xff7E5B41;
+    private static final int DEFAULT_SELECTED_INDICATOR_COLOR = 0xff6E2416;
 
     private final int mBottomBorderThickness;
     private final Paint mBottomBorderPaint;
@@ -126,12 +127,18 @@ class SlidingTabStrip extends LinearLayout {
 
             mSelectedIndicatorPaint.setColor(color);
 
-            canvas.drawRect(left, height - mSelectedIndicatorThickness, right,
-                    height, mSelectedIndicatorPaint);
+            if (Build.VERSION.SDK_INT >= 21) {
+                canvas.drawRoundRect(left, height - mSelectedIndicatorThickness, right,
+                        height,10f,10f, mSelectedIndicatorPaint);
+            }else{
+                canvas.drawRect(left, height - mSelectedIndicatorThickness, right,
+                        height, mSelectedIndicatorPaint);            }
+
         }
 
         // Thin underline along the entire bottom edge
         canvas.drawRect(0, height - mBottomBorderThickness, getWidth(), height, mBottomBorderPaint);
+
     }
 
     /**

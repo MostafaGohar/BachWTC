@@ -29,7 +29,8 @@
         <activity android:name=".BookActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity android:name=".SongActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/AppTheme.SlidrTheme"/>
     </application>
 
 </manifest>

@@ -3,13 +3,10 @@ package gohar.mostafa.bachwtc;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,42 +15,31 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
-import android.transition.Visibility;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.r0adkll.slidr.Slidr;
 
 import java.util.ArrayList;
-
-import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         adjustFontScale(getResources().getConfiguration());
         count = 1;
+
 
 
         mainActivity = this;
@@ -347,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
                             intent.putExtra("BOOK_NUMBER", bookNumber);
                             intent.putExtra("SONG_NUMBER", songNumber);
                             intent.putExtra("PRELUDE", true);
+
                             startActivity(intent);
 
                         }
@@ -364,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
                             intent.putExtra("BOOK_NUMBER", bookNumber);
                             intent.putExtra("SONG_NUMBER", songNumber);
                             intent.putExtra("PRELUDE", false);
+
                             startActivity(intent);
 
                         }

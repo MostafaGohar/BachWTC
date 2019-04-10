@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SongActivity"
+    android:background="@android:color/background_light"
     android:keepScreenOn="true"
     android:id="@+id/masterLayout"
     android:orientation="vertical">
@@ -30,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.05"
             android:background="@android:color/transparent"
-            android:src="@mipmap/ic_play" />
+            android:src="@drawable/ic_play" />
 
 
         <SeekBar
@@ -55,7 +56,7 @@
 
         <gohar.mostafa.bachwtc.SlidingTabLayout
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="6dp"
             android:id="@+id/tabs"/>
 
 

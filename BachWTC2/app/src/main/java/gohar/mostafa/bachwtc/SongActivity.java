@@ -1,11 +1,6 @@
 package gohar.mostafa.bachwtc;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.KeyguardManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,60 +8,40 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.Typeface;
-import android.graphics.pdf.PdfRenderer;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
-import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.GridLayout;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.listener.OnDrawListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrInterface;
+import com.r0adkll.slidr.model.SlidrListener;
+import com.r0adkll.slidr.model.SlidrPosition;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import me.imid.swipebacklayout.lib.SwipeBackLayout;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-import static android.app.Notification.DEFAULT_ALL;
-import static android.app.Notification.DEFAULT_VIBRATE;
-import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 
 public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBufferingUpdateListener,MediaPlayer.OnCompletionListener{
 
@@ -100,10 +75,14 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
     private LinearLayout player;
     private RelativeLayout masterLayout;
 
+    public static SlidrInterface slidrInterface;
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         mediaPlayer.stop();
+
     }
 
 
@@ -119,10 +98,14 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_song);
+
+        slidrInterface = Slidr.attach(this);
 
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -273,12 +256,12 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
                         if(!mediaPlayer.isPlaying())
                         {
                             mediaPlayer.start();
-                            btn_play_pause.setImageResource(R.mipmap.ic_pause);
+                            btn_play_pause.setImageResource(R.drawable.ic_pause);
                         }
                         else
                         {
                             mediaPlayer.pause();
-                            btn_play_pause.setImageResource(R.mipmap.ic_play);
+                            btn_play_pause.setImageResource(R.drawable.ic_play);
                         }
 
                         updateSeekBar();
@@ -315,6 +298,17 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            public void onPageSelected(int position) {
+                if(position == 0)
+                    slidrInterface.unlock();
+                else
+                    slidrInterface.lock();
+            }
+        });
 
 
 
@@ -536,7 +530,7 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        btn_play_pause.setImageResource(R.mipmap.ic_play);
+        btn_play_pause.setImageResource(R.drawable.ic_play);
         realtimeLength = mediaFileLength;
         seekBar.setProgress(0);
 
@@ -617,10 +611,12 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
             String song = songNumber+"";
 
             String path;
-            if(position == 0)
+            if(position == 0) {
                 path = "A/";
-            else
+            }
+            else {
                 path = "B/";
+            }
             if(songNumber < 10)
                 song = 0+song;
             path +=bookNumber+"_"+song;
