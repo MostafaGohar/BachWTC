@@ -119,14 +119,6 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
             final View layout = inflater.inflate(R.layout.songs_page,container,false);
             count = 1;
-            final SlidingTabLayout tabs = layout.findViewById(R.id.tabs);
-
-
-
-//            GridLayout mGridLayout = layout.findViewById(R.id.gridLayout);
-//            mGridLayout.setRowCount(6);
-//            mGridLayout.setColumnCount(4);
-
             final LinearLayout containerLayout = layout.findViewById(R.id.container_layout);
 
             Bundle bundle = getArguments();
@@ -135,12 +127,9 @@ public class MainActivity extends AppCompatActivity {
             Drawable drawable;
             if(bookNumber == 1) {
                 drawable = mainActivity.resizeImage(R.drawable.wallz11);
-//               containerLayout.setPadding(150,70,50,70);
             }
             else {
                 drawable = mainActivity.resizeImage(R.drawable.wallz22);
-//                containerLayout.setPadding(80,70,150,70);
-
             }
             containerLayout.post(new Runnable() {
                 @Override
@@ -158,12 +147,6 @@ public class MainActivity extends AppCompatActivity {
             });
             containerLayout.setBackground(drawable);
 
-//
-//            Drawable drawable = getResources().getDrawable(id);
-
-
-
-
             for(int i = 0;i<6;i++){
                 for(int j = 0;j<4;j++) {
                     //Get actual count as if it were one loop
@@ -175,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
                     PFLayout.setTag("PFLayout_"+bookNumber+"_"+count);
                     l1.setTag("keyLayout_"+bookNumber+"_"+count);
-                    Log.v("LMAO","PFLayout_"+bookNumber+"_"+count);
+                    Log.v("PFPFPF","PFLayout_"+bookNumber+"_"+count);
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
                     final ImageView imageView = new ImageView(getContext());
                     AutoResizeTextView textView = new AutoResizeTextView(getContext());
@@ -185,8 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                     imageView.setAlpha(0.8f);
                     textView.setAlpha(0.8f);
-//                    Typeface face= ResourcesCompat.getFont(getContext(), R.font.font_4);
-//                    textView.setTypeface(face);
+
                     imageView.post(new Runnable() {
                         @Override
                         public void run() {
@@ -197,64 +179,60 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     imageView.setImageResource(getKeySignatureDrawable(getContext(), count, bookNumber));
-                    //imageView.setScaleType(ImageView.ScaleType.FIT_END);
 
                     textView.setText(getSongName(count, bookNumber));
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextColor(Color.BLACK);
-                    //textView.setTypeface(Typeface.DEFAULT_BOLD);
 
-                    final TextView preludeLayout = new TextView(getContext());
-                    final TextView fugueLayout = new TextView(getContext());
+                    final LinearLayout _preludeLayout = new LinearLayout(getContext());
+                    final LinearLayout _fugueLayout = new LinearLayout(getContext());
 
-//                    preludeLayout.setTextColor(Color.WHITE);
-//                    fugueLayout.setTextColor(Color.WHITE);
-//                    preludeLayout.setBackgroundColor(Color.DKGRAY);
-//                    fugueLayout.setBackgroundColor(Color.GRAY);
-                    preludeLayout.setText("P");
-//                    preludeLayout.setTextSize(50);
-//                    fugueLayout.setTextSize(50);
-                    preludeLayout.setTextColor(Color.BLACK);
-                    fugueLayout.setTextColor(Color.BLACK);
+                    final ImageView preludeLayout = new ImageView(getContext());
+                    final ImageView fugueLayout = new ImageView(getContext());
+                    final LinearLayout pLayout1 = new LinearLayout((getContext()));
+                    final LinearLayout pLayout2 = new LinearLayout((getContext()));
+                    final LinearLayout fLayout1 = new LinearLayout((getContext()));
+                    final LinearLayout fLayout2 = new LinearLayout((getContext()));
 
-                    fugueLayout.setText("F");
-                    fugueLayout.setGravity(Gravity.CENTER);
-                    preludeLayout.setGravity(Gravity.CENTER);
 
-                    Typeface type1 = Typeface.createFromAsset(getContext().getAssets(),"fonts/corner.ttf");
-                    fugueLayout.setTypeface(type1);
-                    fugueLayout.setAlpha(0.7f);
-                    preludeLayout.setTypeface(type1);
-                    preludeLayout.setAlpha(0.7f);
+                    preludeLayout.setBackgroundResource(R.drawable.p_trans);
+                    fugueLayout.setBackgroundResource(R.drawable.f_trans);
+                    _preludeLayout.setPadding(3,3,3,3);
+                    _fugueLayout.setPadding(3,3, 3,3);
+                    preludeLayout.setAlpha(0.9f);
+                    fugueLayout.setAlpha(0.9f);
 
                     l1.addView(imageView);
                     l2.addView(textView);
                     PFLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    _preludeLayout.setOrientation(LinearLayout.VERTICAL);
+                    _fugueLayout.setOrientation(LinearLayout.VERTICAL);
                     PFLayout.setVisibility(View.GONE);
-                    PFLayout.addView(preludeLayout);
-                    PFLayout.addView(fugueLayout);
-                    //PFLayout.setBackgroundResource(R.drawable.pf_back_3);
-//                    PFLayout.setPadding(50,200,50,200);
 
-                    PFLayout.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.v("ZZZZZZZZ",PFLayout.getHeight()+"_"+PFLayout.getWidth());
-                            PFLayout.setPadding(0
-                                    ,(int)(((View)PFLayout.getParent()).getHeight()*0.08)
-                                    , 0
-                                    ,0);
-                            preludeLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/11);
-                            fugueLayout.setTextSize(((View) PFLayout.getParent()).getHeight()/11);
-                        }
-                    });
+                    _preludeLayout.addView(pLayout1);
+                    _preludeLayout.addView(preludeLayout);
+                    _preludeLayout.addView(pLayout2);
+                    _fugueLayout.addView(fLayout1);
+                    _fugueLayout.addView(fugueLayout);
+                    _fugueLayout.addView(fLayout2);
+                    PFLayout.addView(_preludeLayout);
+                    PFLayout.addView(_fugueLayout);
 
                     final LinearLayout masterLayout = new LinearLayout(getContext());
 
-                    LinearLayout.LayoutParams PFparams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+                    LinearLayout.LayoutParams _PFparams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+                    _preludeLayout.setLayoutParams(_PFparams);
+                    _fugueLayout.setLayoutParams(_PFparams);
+
+                    LinearLayout.LayoutParams PFparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0, 0.5f);
+                    LinearLayout.LayoutParams PFparams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0, 0.25f);
+
                     preludeLayout.setLayoutParams(PFparams);
                     fugueLayout.setLayoutParams(PFparams);
-
+                    pLayout1.setLayoutParams(PFparams1);
+                    pLayout2.setLayoutParams(PFparams1);
+                    fLayout1.setLayoutParams(PFparams1);
+                    fLayout2.setLayoutParams(PFparams1);
 
 
 
@@ -264,39 +242,18 @@ public class MainActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams PFlp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0,0.8f);
                     masterLayout.setGravity(Gravity.CENTER);
                     PFLayout.setLayoutParams(PFlp);
-//                    PFLayout.setPadding(100, 50, 50, 100);
-                    //masterLayout.setLayoutParams(lp);
                     masterLayout.addView(linearLayout);
-                    //masterLayout.addView(PFLayout);
                     masterLayout.setLayoutParams(lp);
-
-
-
                     imageView.setLayoutParams(lp);
                     textView.setLayoutParams(lp);
                     LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.8f);
-
-
                     l1.setLayoutParams(lp1);
                     LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.2f);
-
                     l2.setLayoutParams(lp2);
-
                     linearLayout.setGravity(Gravity.CENTER);
                     linearLayout.addView(l1);
                     linearLayout.addView(PFLayout);
                     linearLayout.addView(l2);
-                    //TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-                    //  GridLayout.LayoutParams params = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 1f),      GridLayout.spec(GridLayout.UNDEFINED, 1f));
-
-                    //masterLayout.setLayoutParams(params);
-                    //masterLayout.setPadding(20,20,20,20);
-
-                    //TypedValue typedValue = new TypedValue();
-                    //getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
-                    //linearLayout.setBackgroundResource(typedValue.resourceId);
-//                    linearLayout.setTag(bookNumber + "_" + count);
                     linearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -364,17 +321,6 @@ public class MainActivity extends AppCompatActivity {
                     dumpingLayout.addView(masterLayout);
                     count++;
                 }
-//                for(int j = 0;j<4;j++){
-//                    TextView textView = new TextView(getContext());
-//                    textView.setText(songNames.get(j));
-//                    textView.setGravity(Gravity.CENTER);
-//                    textView.setTextColor(Color.BLACK);
-//
-//                    GridLayout.LayoutParams param = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 0.1f),      GridLayout.spec(GridLayout.UNDEFINED, 1f));
-//                    textView.setLayoutParams(param);
-//                    mGridLayout.addView(textView);
-//                }
-
             }
             return layout;
         }
@@ -425,38 +371,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
-
-        private static ArrayList<View> getViewsByTag(ViewGroup root, String tag){
-            ArrayList<View> views = new ArrayList<View>();
-            final int childCount = root.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                final View child = root.getChildAt(i);
-                if (child instanceof ViewGroup) {
-                    views.addAll(getViewsByTag((ViewGroup) child, tag));
-                }
-
-                final Object tagObj = child.getTag();
-                if (tagObj != null && tagObj.equals(tag)) {
-                    views.add(child);
-                }
-
-            }
-            return views;
-        }
     }
     public void adjustFontScale(Configuration configuration) {
         Log.v("zappy", configuration.fontScale+"");
-        //if (configuration.fontScale > 1.30) {
-//                LogUtil.log(LogUtil.WARN, TAG, "fontScale=" + configuration.fontScale); //Custom Log class, you can use Log.w
-//                LogUtil.log(LogUtil.WARN, TAG, "font too big. scale down..."); //Custom Log class, you can use Log.w
             configuration.fontScale = (float) 1.0;
             DisplayMetrics metrics = getResources().getDisplayMetrics();
             WindowManager wm = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
             wm.getDefaultDisplay().getMetrics(metrics);
             metrics.scaledDensity = configuration.fontScale * metrics.density;
             getApplicationContext().getResources().updateConfiguration(configuration, metrics);
-        //}
     }
 
     public static int getKeySignatureDrawable(Context context, int x, int book){

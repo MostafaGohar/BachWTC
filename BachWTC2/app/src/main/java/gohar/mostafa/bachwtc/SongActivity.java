@@ -104,8 +104,11 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_song);
+        SlidrConfig config = new SlidrConfig.Builder()
+                                .edge(true)
+                                .build();
 
-        slidrInterface = Slidr.attach(this);
+        slidrInterface = Slidr.attach(this, config);
 
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -298,17 +301,7 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(mViewPager);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            public void onPageScrollStateChanged(int state) {}
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
-            public void onPageSelected(int position) {
-                if(position == 0)
-                    slidrInterface.unlock();
-                else
-                    slidrInterface.lock();
-            }
-        });
 
 
 
