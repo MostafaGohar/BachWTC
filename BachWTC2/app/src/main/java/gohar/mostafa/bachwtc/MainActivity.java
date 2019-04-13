@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     public static MainActivity mainActivity;
 
+    public static int _bookNumber = -1;
+    public static int _keyNumber = -1;
 
     public static int count;
 
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState){
             final View layout = inflater.inflate(R.layout.songs_page,container,false);
             count = 1;
             final LinearLayout containerLayout = layout.findViewById(R.id.container_layout);
@@ -184,57 +186,34 @@ public class MainActivity extends AppCompatActivity {
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextColor(Color.BLACK);
 
-                    final LinearLayout _preludeLayout = new LinearLayout(getContext());
-                    final LinearLayout _fugueLayout = new LinearLayout(getContext());
 
                     final ImageView preludeLayout = new ImageView(getContext());
                     final ImageView fugueLayout = new ImageView(getContext());
-                    final LinearLayout pLayout1 = new LinearLayout((getContext()));
-                    final LinearLayout pLayout2 = new LinearLayout((getContext()));
-                    final LinearLayout fLayout1 = new LinearLayout((getContext()));
-                    final LinearLayout fLayout2 = new LinearLayout((getContext()));
-
-
-                    preludeLayout.setBackgroundResource(R.drawable.p_trans);
-                    fugueLayout.setBackgroundResource(R.drawable.f_trans);
-                    _preludeLayout.setPadding(3,3,3,3);
-                    _fugueLayout.setPadding(3,3, 3,3);
+                    preludeLayout.setImageResource(R.drawable.p_trans);
+                    fugueLayout.setImageResource(R.drawable.f_trans);
                     preludeLayout.setAlpha(0.9f);
                     fugueLayout.setAlpha(0.9f);
+                    preludeLayout.setPadding(6,6,6,6);
+                    fugueLayout.setPadding(6,6,6,6);
 
                     l1.addView(imageView);
                     l2.addView(textView);
                     PFLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    _preludeLayout.setOrientation(LinearLayout.VERTICAL);
-                    _fugueLayout.setOrientation(LinearLayout.VERTICAL);
                     PFLayout.setVisibility(View.GONE);
 
-                    _preludeLayout.addView(pLayout1);
-                    _preludeLayout.addView(preludeLayout);
-                    _preludeLayout.addView(pLayout2);
-                    _fugueLayout.addView(fLayout1);
-                    _fugueLayout.addView(fugueLayout);
-                    _fugueLayout.addView(fLayout2);
-                    PFLayout.addView(_preludeLayout);
-                    PFLayout.addView(_fugueLayout);
+                    PFLayout.addView(preludeLayout);
+                    PFLayout.addView(fugueLayout);
 
                     final LinearLayout masterLayout = new LinearLayout(getContext());
 
-                    LinearLayout.LayoutParams _PFparams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-                    _preludeLayout.setLayoutParams(_PFparams);
-                    _fugueLayout.setLayoutParams(_PFparams);
 
-                    LinearLayout.LayoutParams PFparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0, 0.5f);
-                    LinearLayout.LayoutParams PFparams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0, 0.25f);
+                    LinearLayout.LayoutParams PFparams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
 
                     preludeLayout.setLayoutParams(PFparams);
                     fugueLayout.setLayoutParams(PFparams);
-                    pLayout1.setLayoutParams(PFparams1);
-                    pLayout2.setLayoutParams(PFparams1);
-                    fLayout1.setLayoutParams(PFparams1);
-                    fLayout2.setLayoutParams(PFparams1);
 
-
+                    preludeLayout.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    fugueLayout.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
@@ -254,12 +233,21 @@ public class MainActivity extends AppCompatActivity {
                     linearLayout.addView(l1);
                     linearLayout.addView(PFLayout);
                     linearLayout.addView(l2);
+                    final int countFinal = count;
+
                     linearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            refreshLayout(getActivity());
-                            if(PFLayout.getVisibility() != View.VISIBLE) {
 
+
+                            refreshLayout(getActivity());
+                            Log.v("VIZZZ",bookNumber+"|"+countFinal);
+
+
+
+
+                            if(PFLayout.getVisibility() != View.VISIBLE || !(_bookNumber == bookNumber && _keyNumber == countFinal)) {
+                                Log.v("VIZZZ",PFLayout.getVisibility()+"");
                                 l1.setVisibility(View.GONE);
 
                                 PFLayout.setVisibility(View.VISIBLE);
@@ -277,6 +265,13 @@ public class MainActivity extends AppCompatActivity {
                                 widthAnimator.start();
 
                             }
+                            if(_bookNumber == bookNumber && _keyNumber == countFinal){
+                                refreshLayoutVariables();
+                            }else {
+                                _bookNumber = bookNumber;
+                                _keyNumber = countFinal;
+                            }
+
                         }
                     });
                     preludeLayout.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View view) {
 
                             refreshLayout(getActivity());
+                            refreshLayoutVariables();
 
                             int bookNumber = Integer.parseInt(l1.getTag().toString().split("_")[1]);
                             int songNumber = Integer.parseInt(l1.getTag().toString().split("_")[2]);
@@ -301,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
 
-                           refreshLayout(getActivity());
-
+                            refreshLayout(getActivity());
+                            refreshLayoutVariables();
                             int bookNumber = Integer.parseInt(l1.getTag().toString().split("_")[1]);
                             int songNumber = Integer.parseInt(l1.getTag().toString().split("_")[2]);
                             Log.v("hey", "yes" + bookNumber + "_" + songNumber);
@@ -324,52 +320,96 @@ public class MainActivity extends AppCompatActivity {
             }
             return layout;
         }
+        public void refreshLayoutVariables(){
+            _bookNumber = -1;
+            _keyNumber = -1;
+        }
 
 
         public void refreshLayout(final Activity activity){
-            for(int b = 1;b<3;b++) {
-                for (int i = 1; i < 25; i++) {
-                    View drawer = activity.findViewById(R.id.drawer_layout);
-                    final View PFLayout = drawer.findViewWithTag("PFLayout_"+b+"_"+i);
-                    final View keyLayout = drawer.findViewWithTag("keyLayout_"+b+"_"+i);
-                    if(PFLayout.getVisibility() == View.VISIBLE){
+            if(_bookNumber != -1){
+            View drawer = activity.findViewById(R.id.drawer_layout);
+            final View PFLayout = drawer.findViewWithTag("PFLayout_"+_bookNumber+"_"+_keyNumber);
+            final View keyLayout = drawer.findViewWithTag("keyLayout_"+_bookNumber+"_"+_keyNumber);
 
-                        ValueAnimator widthAnimator = ValueAnimator.ofInt(((View)PFLayout.getParent()).getMeasuredWidth(),0);
-                        final ValueAnimator widthAnimator2 = ValueAnimator.ofInt(0,10);
-                        widthAnimator.setDuration(100);
-                        widthAnimator.setInterpolator(new DecelerateInterpolator());
-                        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+
+                ValueAnimator widthAnimator = ValueAnimator.ofInt(((View)PFLayout.getParent()).getMeasuredWidth(),0);
+                final ValueAnimator widthAnimator2 = ValueAnimator.ofInt(0,10);
+                widthAnimator.setDuration(100);
+                widthAnimator.setInterpolator(new DecelerateInterpolator());
+                widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        PFLayout.getLayoutParams().width = (int) animation.getAnimatedValue();
+                        PFLayout.requestLayout();
+                    }
+                });
+                widthAnimator.addListener(new AnimatorListenerAdapter()
+                {
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        widthAnimator2.setDuration(400);
+                        widthAnimator2.setInterpolator(new DecelerateInterpolator());
+                        widthAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
-                                PFLayout.getLayoutParams().width = (int) animation.getAnimatedValue();
-                                PFLayout.requestLayout();
+                                keyLayout.setAlpha(((int)animation.getAnimatedValue()/10f));
+                                keyLayout.requestLayout();
                             }
                         });
-                        widthAnimator.addListener(new AnimatorListenerAdapter()
-                        {
-                            @Override
-                            public void onAnimationEnd(Animator animation)
-                            {
-                                widthAnimator2.setDuration(400);
-                                widthAnimator2.setInterpolator(new DecelerateInterpolator());
-                                widthAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                    @Override
-                                    public void onAnimationUpdate(ValueAnimator animation) {
-                                        keyLayout.setAlpha(((int)animation.getAnimatedValue()/10f));
-                                        keyLayout.requestLayout();
-                                    }
-                                });
-                                keyLayout.setVisibility(View.VISIBLE);
-                                PFLayout.setVisibility(View.GONE);
-                                widthAnimator2.start();
+                        keyLayout.setVisibility(View.VISIBLE);
+                        PFLayout.setVisibility(View.GONE);
+                        widthAnimator2.start();
 
-                            }
-                        });
-                        widthAnimator.start();
                     }
-
-                }
+                });
+                widthAnimator.start();
             }
+//            for(int b = 1;b<3;b++) {
+//                for (int i = 1; i < 25; i++) {
+//                    View drawer = activity.findViewById(R.id.drawer_layout);
+//                    final View PFLayout = drawer.findViewWithTag("PFLayout_"+b+"_"+i);
+//                    final View keyLayout = drawer.findViewWithTag("keyLayout_"+b+"_"+i);
+//                    if(PFLayout.getVisibility() == View.VISIBLE){
+//
+//                        ValueAnimator widthAnimator = ValueAnimator.ofInt(((View)PFLayout.getParent()).getMeasuredWidth(),0);
+//                        final ValueAnimator widthAnimator2 = ValueAnimator.ofInt(0,10);
+//                        widthAnimator.setDuration(100);
+//                        widthAnimator.setInterpolator(new DecelerateInterpolator());
+//                        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                            @Override
+//                            public void onAnimationUpdate(ValueAnimator animation) {
+//                                PFLayout.getLayoutParams().width = (int) animation.getAnimatedValue();
+//                                PFLayout.requestLayout();
+//                            }
+//                        });
+//                        widthAnimator.addListener(new AnimatorListenerAdapter()
+//                        {
+//                            @Override
+//                            public void onAnimationEnd(Animator animation)
+//                            {
+//                                widthAnimator2.setDuration(400);
+//                                widthAnimator2.setInterpolator(new DecelerateInterpolator());
+//                                widthAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                                    @Override
+//                                    public void onAnimationUpdate(ValueAnimator animation) {
+//                                        keyLayout.setAlpha(((int)animation.getAnimatedValue()/10f));
+//                                        keyLayout.requestLayout();
+//                                    }
+//                                });
+//                                keyLayout.setVisibility(View.VISIBLE);
+//                                PFLayout.setVisibility(View.GONE);
+//                                widthAnimator2.start();
+//
+//                            }
+//                        });
+//                        widthAnimator.start();
+//                    }
+//
+//                }
+//            }
         }
     }
     public void adjustFontScale(Configuration configuration) {
