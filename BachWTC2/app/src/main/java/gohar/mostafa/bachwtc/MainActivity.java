@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -37,15 +38,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.r0adkll.slidr.Slidr;
-
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
     public static MainActivity mainActivity;
-
     public static int _bookNumber = -1;
     public static int _keyNumber = -1;
 
@@ -57,11 +52,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //DISABLE AUTO ADJUST FONT ON ANDROID
         adjustFontScale(getResources().getConfiguration());
+        //
         count = 1;
-
-
 
         mainActivity = this;
 //        toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -180,29 +174,58 @@ public class MainActivity extends AppCompatActivity {
                                     ,(int)(imageView.getWidth()*0.09));
                         }
                     });
-                    imageView.setImageResource(getKeySignatureDrawable(getContext(), count, bookNumber));
+                    imageView.setImageResource(getKeySignatureDrawable(getContext(), count));
 
                     textView.setText(getSongName(count, bookNumber));
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextColor(Color.BLACK);
 
 
-                    final ImageView preludeLayout = new ImageView(getContext());
-                    final ImageView fugueLayout = new ImageView(getContext());
-                    preludeLayout.setImageResource(R.drawable.p_trans);
-                    fugueLayout.setImageResource(R.drawable.f_trans);
-                    preludeLayout.setAlpha(0.9f);
-                    fugueLayout.setAlpha(0.9f);
-                    preludeLayout.setPadding(6,6,6,6);
-                    fugueLayout.setPadding(6,6,6,6);
+                    final TextView preludeLayout = new TextView(getContext());
+                    final TextView fugueLayout = new TextView(getContext());
+                    preludeLayout.setText("P");
+                    fugueLayout.setText("F");
+                    preludeLayout.setTextColor(Color.BLACK);
+                    fugueLayout.setTextColor(Color.BLACK);
+                    fugueLayout.setGravity(Gravity.CENTER);
+                    preludeLayout.setGravity(Gravity.CENTER);
+                    Typeface type1 = Typeface.createFromAsset(getContext().getAssets(),"fonts/corner.ttf");
+                    fugueLayout.setTypeface(type1);
+                    fugueLayout.setAlpha(0.7f);
+                    preludeLayout.setTypeface(type1);
+                    preludeLayout.setAlpha(0.7f);
+                    //OLD IMAGE CODE
+//                    preludeLayout.setImageResource(R.drawable.p_trans);
+//                    fugueLayout.setImageResource(R.drawable.f_trans);
+//                    preludeLayout.setPadding(6,80,6,80);
+//                    fugueLayout.setPadding(6,80,6,80);
 
                     l1.addView(imageView);
                     l2.addView(textView);
                     PFLayout.setOrientation(LinearLayout.HORIZONTAL);
                     PFLayout.setVisibility(View.GONE);
 
+
                     PFLayout.addView(preludeLayout);
                     PFLayout.addView(fugueLayout);
+
+                    //CHNAGE TEXT SIZE BASED ON DEVICE HEIGHT
+                    Display display = getActivity().getWindowManager().getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+                    final int height = size.y;
+                    PFLayout.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.v("ZZZZZZZZ",PFLayout.getHeight()+"_"+PFLayout.getWidth());
+                            PFLayout.setPadding(0
+                                    ,(int)(((View)PFLayout.getParent()).getHeight()*0.08)
+                                    , 0
+                                    ,0);
+                            preludeLayout.setTextSize(height/60f);
+                            fugueLayout.setTextSize(height/60f);
+                        }
+                    });
 
                     final LinearLayout masterLayout = new LinearLayout(getContext());
 
@@ -212,8 +235,8 @@ public class MainActivity extends AppCompatActivity {
                     preludeLayout.setLayoutParams(PFparams);
                     fugueLayout.setLayoutParams(PFparams);
 
-                    preludeLayout.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    fugueLayout.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//                    preludeLayout.setScaleType(ImageView.ScaleType.FIT_XY);
+//                    fugueLayout.setScaleType(ImageView.ScaleType.FIT_XY);
 
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
@@ -412,6 +435,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
         }
     }
+    //DISABLE AUTO ADJUST FONT IN ANDROID
     public void adjustFontScale(Configuration configuration) {
         Log.v("zappy", configuration.fontScale+"");
             configuration.fontScale = (float) 1.0;
@@ -422,16 +446,14 @@ public class MainActivity extends AppCompatActivity {
             getApplicationContext().getResources().updateConfiguration(configuration, metrics);
     }
 
-    public static int getKeySignatureDrawable(Context context, int x, int book){
+    //GET IMAGE ID
+    public static int getKeySignatureDrawable(Context context, int x){
 
-        int id;
-        if(book == 1 && x == 8)
-            id = context.getResources().getIdentifier("ic_"+13, "drawable", context.getPackageName());
-        else
-            id = context.getResources().getIdentifier("ic_"+x, "drawable", context.getPackageName());
-        return id;
+        return context.getResources().getIdentifier("ic_"+x, "drawable", context.getPackageName());
+
     }
 
+    //GET SONG NAME BASED ON BOOK/COUNT
     public static String getSongName(int song, int book){
         switch(song){
 //FF03＃
@@ -464,13 +486,13 @@ public class MainActivity extends AppCompatActivity {
         return ""+song;
     }
 
+    //RESIZE IMAGE TO PREVENT LOADING ENTIRE IMAGE TO MEMORY
     public Drawable resizeImage(int imageResource) {// R.drawable.large_image
         // Get device dimensions
         Display display = getWindowManager().getDefaultDisplay();
         double deviceWidth = display.getWidth();
 
-        BitmapDrawable bd = (BitmapDrawable) this.getResources().getDrawable(
-                imageResource);
+        BitmapDrawable bd = (BitmapDrawable) this.getResources().getDrawable(imageResource);
         double imageHeight = bd.getBitmap().getHeight();
         double imageWidth = bd.getBitmap().getWidth();
 
