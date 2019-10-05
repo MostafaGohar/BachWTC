@@ -327,117 +327,124 @@ public class SongActivity extends AppCompatActivity implements MediaPlayer.OnBuf
     }
     private String getSongUrl(int bookNumber, int songNumber, boolean isPrelude) {
 
-        String songName = bookNumber+"_"+songNumber+"_";
+        String url = "https://storage.googleapis.com/bachwtc.appspot.com/Well%20Tempered%20Clavier/Book%20"+
+                bookNumber+"/"+bookNumber+"_"+songNumber;
         if(isPrelude)
-            songName+="p";
+            url+="_p.mp3";
         else
-            songName+="f";
-        switch(songName){
-
-            case "1_1_f": return "https://od.lk/s/NjJfNTY1MDc3Ml8/1_1_f.mp3";
-            case "1_2_f": return "https://od.lk/s/NjJfNTY1MDc3NV8/1_2_f.mp3";
-            case "1_3_f": return "https://od.lk/s/NjJfNTY1MTU0OF8/1_3_f.mp3";
-            case "1_4_f": return "https://od.lk/s/NjJfNTY1MTU1MF8/1_4_f.mp3";
-            case "1_5_f": return "https://od.lk/s/NjJfNTY1MTU1Ml8/1_5_f.mp3";
-            case "1_6_f": return "https://od.lk/s/NjJfNTY1MTU1NF8/1_6_f.mp3";
-            case "1_7_f": return "https://od.lk/s/NjJfNTY1MTU1Nl8/1_7_f.mp3";
-            case "1_8_f": return "https://od.lk/s/NjJfNTY1MTU1OF8/1_8_f.mp3";
-            case "1_9_f": return "https://od.lk/s/NjJfNTY1MTU2MF8/1_9_f.mp3";
-            case "1_10_f": return "https://od.lk/s/NjJfNTY1MTU2Ml8/1_10_f.mp3";
-            case "1_11_f": return "https://od.lk/s/NjJfNTY1MTU2NF8/1_11_f.mp3";
-            case "1_12_f": return "https://od.lk/s/NjJfNTY1MTU2Nl8/1_12_f.mp3";
-            case "1_13_f": return "https://od.lk/s/NjJfNTY1MTU2OF8/1_13_f.mp3";
-            case "1_14_f": return "https://od.lk/s/NjJfNTY1MTU3MF8/1_14_f.mp3";
-            case "1_15_f": return "https://od.lk/s/NjJfNTY1MTU4MV8/1_15_f.mp3";
-            case "1_16_f": return "https://od.lk/s/NjJfNTY1MTU4M18/1_16_f.mp3";
-            case "1_17_f": return "https://od.lk/s/NjJfNTY1MTU4Nl8/1_17_f.mp3";
-            case "1_18_f": return "https://od.lk/s/NjJfNTY1MTYwMV8/1_18_f.mp3";
-            case "1_19_f": return "https://od.lk/s/NjJfNTY1MTYwM18/1_19_f.mp3";
-            case "1_20_f": return "https://od.lk/s/NjJfNTY1MTYwNl8/1_20_f.mp3";
-            case "1_21_f": return "https://od.lk/s/NjJfNTY1MTYwOV8/1_21_f.mp3";
-            case "1_22_f": return "https://od.lk/s/NjJfNTY1MTYxMV8/1_22_f.mp3";
-            case "1_23_f": return "https://od.lk/s/NjJfNTY1MTU0MV8/1_23_f.mp3";
-            case "1_24_f": return "https://od.lk/s/NjJfNTY1MTU0NF8/1_24_f.mp3";
-            //Prelude
-            case "1_1_p": return "https://od.lk/s/NjJfNTY1MTU0Nl8/1_1_p.mp3";
-            case "1_2_p": return "https://od.lk/s/NjJfNTY1MTU0N18/1_2_p.mp3";
-            case "1_3_p": return "https://od.lk/s/NjJfNTY1MTU0OV8/1_3_p.mp3";
-            case "1_4_p": return "https://od.lk/s/NjJfNTY1MTU1MV8/1_4_p.mp3";
-            case "1_5_p": return "https://od.lk/s/NjJfNTY1MTU1M18/1_5_p.mp3";
-            case "1_6_p": return "https://od.lk/s/NjJfNTY1MTU1NV8/1_6_p.mp3";
-            case "1_7_p": return "https://od.lk/s/NjJfNTY1MTU1N18/1_7_p.mp3";
-            case "1_8_p": return "https://od.lk/s/NjJfNTY1MTU1OV8/1_8_p.mp3";
-            case "1_9_p": return "https://od.lk/s/NjJfNTY1MTU2MV8/1_9_p.mp3";
-            case "1_10_p": return "https://od.lk/s/NjJfNTY1MTU2M18/1_10_p.mp3";
-            case "1_11_p": return "https://od.lk/s/NjJfNTY1MTU2NV8/1_11_p.mp3";
-            case "1_12_p": return "https://od.lk/s/NjJfNTY1MTU2N18/1_12_p.mp3";
-            case "1_13_p": return "https://od.lk/s/NjJfNTY1MTU2OV8/1_13_p.mp3";
-            case "1_14_p": return "https://od.lk/s/NjJfNTY1MTU3MV8/1_14_p.mp3";
-            case "1_15_p": return "https://od.lk/s/NjJfNTY1MTU4Ml8/1_15_p.mp3";
-            case "1_16_p": return "https://od.lk/s/NjJfNTY1MTU4NF8/1_16_p.mp3";
-            case "1_17_p": return "https://od.lk/s/NjJfNTY1MTU5MF8/1_17_p.mp3";
-            case "1_18_p": return "https://od.lk/s/NjJfNTY1MTYwMl8/1_18_p.mp3";
-            case "1_19_p": return "https://od.lk/s/NjJfNTY1MTYwNF8/1_19_p.mp3";
-            case "1_20_p": return "https://od.lk/s/NjJfNTY1MTYwN18/1_20_p.mp3";
-            case "1_21_p": return "https://od.lk/s/NjJfNTY1MTYxMF8/1_21_p.mp3";
-            case "1_22_p": return "https://od.lk/s/NjJfNTY1MTYxMl8/1_22_p.mp3";
-            case "1_23_p": return "https://od.lk/s/NjJfNTY1MTU0Ml8/1_23_p.mp3";
-            case "1_24_p": return "https://od.lk/s/NjJfNTY1MTU0NV8/1_24_p.mp3";
-
-
-            case "2_1_f": return "https://od.lk/s/NjJfNTY1MTkxOF8/2_01_f.mp3";
-            case "2_2_f": return "https://od.lk/s/NjJfNTY1MTkwOF8/2_02_f.mp3";
-            case "2_3_f": return "https://od.lk/s/NjJfNTY1MTkxMF8/2_03_f.mp3";
-            case "2_4_f": return "https://od.lk/s/NjJfNTY1MTkxMl8/2_04_f.mp3";
-            case "2_5_f": return "https://od.lk/s/NjJfNTY1MTkxNF8/2_05_f.mp3";
-            case "2_6_f": return "https://od.lk/s/NjJfNTY1MTkxNl8/2_06_f.mp3";
-            case "2_7_f": return "https://od.lk/s/NjJfNTY1MTY0Nl8/2_07_f.mp3";
-            case "2_8_f": return "https://od.lk/s/NjJfNTY1MTY0OF8/2_08_f.mp3";
-            case "2_9_f": return "https://od.lk/s/NjJfNTY1MTY1MV8/2_09_f.mp3";
-            case "2_10_f": return "https://od.lk/s/NjJfNTY1MTY1M18/2_10_f.mp3";
-            case "2_11_f": return "https://od.lk/s/NjJfNTY1MTY1NV8/2_11_f.mp3";
-            case "2_12_f": return "https://od.lk/s/NjJfNTY1MTY1N18/2_12_f.mp3";
-            case "2_13_f": return "https://od.lk/s/NjJfNTY1MTY1OV8/2_13_f.mp3";
-            case "2_14_f": return "https://od.lk/s/NjJfNTY1MTY2MV8/2_14_f.mp3";
-            case "2_15_f": return "https://od.lk/s/NjJfNTY1MTY3M18/2_15_f.mp3";
-            case "2_16_f": return "https://od.lk/s/NjJfNTY1MTY3NV8/2_16_f.mp3";
-            case "2_17_f": return "https://od.lk/s/NjJfNTY1MTY3N18/2_17_f.mp3";
-            case "2_18_f": return "https://od.lk/s/NjJfNTY1MTY3OV8/2_18_f.mp3";
-            case "2_19_f": return "https://od.lk/s/NjJfNTY1MTY4MV8/2_19_f.mp3";
-            case "2_20_f": return "https://od.lk/s/NjJfNTY1MTY4M18/2_20_f.mp3";
-            case "2_21_f": return "https://od.lk/s/NjJfNTY1MTY4NV8/2_21_f.mp3";
-            case "2_22_f": return "https://od.lk/s/NjJfNTY1MTY4OF8/2_22_f.mp3";
-            case "2_23_f": return "https://od.lk/s/NjJfNTY1MTY5Ml8/2_23_f.mp3";
-            case "2_24_f": return "https://od.lk/s/NjJfNTY1MTY3MF8/2_24_f.mp3";
-            //Prelude
-            case "2_1_p": return "https://od.lk/s/NjJfNTY1MTkwN18/2_01_p.mp3";
-            case "2_2_p": return "https://od.lk/s/NjJfNTY1MTkwOV8/2_02_p.mp3";
-            case "2_3_p": return "https://od.lk/s/NjJfNTY1MTkxMV8/2_03_p.mp3";
-            case "2_4_p": return "https://od.lk/s/NjJfNTY1MTkxM18/2_04_p.mp3";
-            case "2_5_p": return "https://od.lk/s/NjJfNTY1MTkxNV8/2_05_p.mp3";
-            case "2_6_p": return "https://od.lk/s/NjJfNTY1MTkxN18/2_06_p.mp3";
-            case "2_7_p": return "https://od.lk/s/NjJfNTY1MTY0N18/2_07_p.mp3";
-            case "2_8_p": return "https://od.lk/s/NjJfNTY1MTY1MF8/2_08_p.mp3";
-            case "2_9_p": return "https://od.lk/s/NjJfNTY1MTY1Ml8/2_09_p.mp3";
-            case "2_10_p": return "https://od.lk/s/NjJfNTY1MTY1NF8/2_10_p.mp3";
-            case "2_11_p": return "https://od.lk/s/NjJfNTY1MTY1Nl8/2_11_p.mp3";
-            case "2_12_p": return "https://od.lk/s/NjJfNTY1MTY1OF8/2_12_p.mp3";
-            case "2_13_p": return "https://od.lk/s/NjJfNTY1MTY2MF8/2_13_p.mp3";
-            case "2_14_p": return "https://od.lk/s/NjJfNTY1MTY3Ml8/2_14_p.mp3";
-            case "2_15_p": return "https://od.lk/s/NjJfNTY1MTY3NF8/2_15_p.mp3";
-            case "2_16_p": return "https://od.lk/s/NjJfNTY1MTY3Nl8/2_16_p.mp3";
-            case "2_17_p": return "https://od.lk/s/NjJfNTY1MTY3OF8/2_17_p.mp3";
-            case "2_18_p": return "https://od.lk/s/NjJfNTY1MTY4MF8/2_18_p.mp3";
-            case "2_19_p": return "https://od.lk/s/NjJfNTY1MTY4Ml8/2_19_p.mp3";
-            case "2_20_p": return "https://od.lk/s/NjJfNTY1MTY4NF8/2_20_p.mp3";
-            case "2_21_p": return "https://od.lk/s/NjJfNTY1MTY4N18/2_21_p.mp3";
-            case "2_22_p": return "https://od.lk/s/NjJfNTY1MTY5MF8/2_22_p.mp3";
-            case "2_23_p": return "https://od.lk/s/NjJfNTY1MTY5M18/2_23_p.mp3";
-            case "2_24_p": return "https://od.lk/s/NjJfNTY1MTY3MV8/2_24_p.mp3";
-
-        }
-
-        return "https://od.lk/s/NjJfNTY1MDc3Ml8/1_1_f.mp3";
+            url+="_f.mp3";
+        return url;
+//        String songName = bookNumber+"_"+songNumber+"_";
+//        if(isPrelude)
+//            songName+="p";
+//        else
+//            songName+="f";
+//        switch(songName){
+//
+//            case "1_1_f": return "https://od.lk/s/NjJfNTY1MDc3Ml8/1_1_f.mp3";
+//            case "1_2_f": return "https://od.lk/s/NjJfNTY1MDc3NV8/1_2_f.mp3";
+//            case "1_3_f": return "https://od.lk/s/NjJfNTY1MTU0OF8/1_3_f.mp3";
+//            case "1_4_f": return "https://od.lk/s/NjJfNTY1MTU1MF8/1_4_f.mp3";
+//            case "1_5_f": return "https://od.lk/s/NjJfNTY1MTU1Ml8/1_5_f.mp3";
+//            case "1_6_f": return "https://od.lk/s/NjJfNTY1MTU1NF8/1_6_f.mp3";
+//            case "1_7_f": return "https://od.lk/s/NjJfNTY1MTU1Nl8/1_7_f.mp3";
+//            case "1_8_f": return "https://od.lk/s/NjJfNTY1MTU1OF8/1_8_f.mp3";
+//            case "1_9_f": return "https://od.lk/s/NjJfNTY1MTU2MF8/1_9_f.mp3";
+//            case "1_10_f": return "https://od.lk/s/NjJfNTY1MTU2Ml8/1_10_f.mp3";
+//            case "1_11_f": return "https://od.lk/s/NjJfNTY1MTU2NF8/1_11_f.mp3";
+//            case "1_12_f": return "https://od.lk/s/NjJfNTY1MTU2Nl8/1_12_f.mp3";
+//            case "1_13_f": return "https://od.lk/s/NjJfNTY1MTU2OF8/1_13_f.mp3";
+//            case "1_14_f": return "https://od.lk/s/NjJfNTY1MTU3MF8/1_14_f.mp3";
+//            case "1_15_f": return "https://od.lk/s/NjJfNTY1MTU4MV8/1_15_f.mp3";
+//            case "1_16_f": return "https://od.lk/s/NjJfNTY1MTU4M18/1_16_f.mp3";
+//            case "1_17_f": return "https://od.lk/s/NjJfNTY1MTU4Nl8/1_17_f.mp3";
+//            case "1_18_f": return "https://od.lk/s/NjJfNTY1MTYwMV8/1_18_f.mp3";
+//            case "1_19_f": return "https://od.lk/s/NjJfNTY1MTYwM18/1_19_f.mp3";
+//            case "1_20_f": return "https://od.lk/s/NjJfNTY1MTYwNl8/1_20_f.mp3";
+//            case "1_21_f": return "https://od.lk/s/NjJfNTY1MTYwOV8/1_21_f.mp3";
+//            case "1_22_f": return "https://od.lk/s/NjJfNTY1MTYxMV8/1_22_f.mp3";
+//            case "1_23_f": return "https://od.lk/s/NjJfNTY1MTU0MV8/1_23_f.mp3";
+//            case "1_24_f": return "https://od.lk/s/NjJfNTY1MTU0NF8/1_24_f.mp3";
+//            //Prelude
+//            case "1_1_p": return "https://od.lk/s/NjJfNTY1MTU0Nl8/1_1_p.mp3";
+//            case "1_2_p": return "https://od.lk/s/NjJfNTY1MTU0N18/1_2_p.mp3";
+//            case "1_3_p": return "https://od.lk/s/NjJfNTY1MTU0OV8/1_3_p.mp3";
+//            case "1_4_p": return "https://od.lk/s/NjJfNTY1MTU1MV8/1_4_p.mp3";
+//            case "1_5_p": return "https://od.lk/s/NjJfNTY1MTU1M18/1_5_p.mp3";
+//            case "1_6_p": return "https://od.lk/s/NjJfNTY1MTU1NV8/1_6_p.mp3";
+//            case "1_7_p": return "https://od.lk/s/NjJfNTY1MTU1N18/1_7_p.mp3";
+//            case "1_8_p": return "https://od.lk/s/NjJfNTY1MTU1OV8/1_8_p.mp3";
+//            case "1_9_p": return "https://od.lk/s/NjJfNTY1MTU2MV8/1_9_p.mp3";
+//            case "1_10_p": return "https://od.lk/s/NjJfNTY1MTU2M18/1_10_p.mp3";
+//            case "1_11_p": return "https://od.lk/s/NjJfNTY1MTU2NV8/1_11_p.mp3";
+//            case "1_12_p": return "https://od.lk/s/NjJfNTY1MTU2N18/1_12_p.mp3";
+//            case "1_13_p": return "https://od.lk/s/NjJfNTY1MTU2OV8/1_13_p.mp3";
+//            case "1_14_p": return "https://od.lk/s/NjJfNTY1MTU3MV8/1_14_p.mp3";
+//            case "1_15_p": return "https://od.lk/s/NjJfNTY1MTU4Ml8/1_15_p.mp3";
+//            case "1_16_p": return "https://od.lk/s/NjJfNTY1MTU4NF8/1_16_p.mp3";
+//            case "1_17_p": return "https://od.lk/s/NjJfNTY1MTU5MF8/1_17_p.mp3";
+//            case "1_18_p": return "https://od.lk/s/NjJfNTY1MTYwMl8/1_18_p.mp3";
+//            case "1_19_p": return "https://od.lk/s/NjJfNTY1MTYwNF8/1_19_p.mp3";
+//            case "1_20_p": return "https://od.lk/s/NjJfNTY1MTYwN18/1_20_p.mp3";
+//            case "1_21_p": return "https://od.lk/s/NjJfNTY1MTYxMF8/1_21_p.mp3";
+//            case "1_22_p": return "https://od.lk/s/NjJfNTY1MTYxMl8/1_22_p.mp3";
+//            case "1_23_p": return "https://od.lk/s/NjJfNTY1MTU0Ml8/1_23_p.mp3";
+//            case "1_24_p": return "https://od.lk/s/NjJfNTY1MTU0NV8/1_24_p.mp3";
+//
+//
+//            case "2_1_f": return "https://od.lk/s/NjJfNTY1MTkxOF8/2_01_f.mp3";
+//            case "2_2_f": return "https://od.lk/s/NjJfNTY1MTkwOF8/2_02_f.mp3";
+//            case "2_3_f": return "https://od.lk/s/NjJfNTY1MTkxMF8/2_03_f.mp3";
+//            case "2_4_f": return "https://od.lk/s/NjJfNTY1MTkxMl8/2_04_f.mp3";
+//            case "2_5_f": return "https://od.lk/s/NjJfNTY1MTkxNF8/2_05_f.mp3";
+//            case "2_6_f": return "https://od.lk/s/NjJfNTY1MTkxNl8/2_06_f.mp3";
+//            case "2_7_f": return "https://od.lk/s/NjJfNTY1MTY0Nl8/2_07_f.mp3";
+//            case "2_8_f": return "https://od.lk/s/NjJfNTY1MTY0OF8/2_08_f.mp3";
+//            case "2_9_f": return "https://od.lk/s/NjJfNTY1MTY1MV8/2_09_f.mp3";
+//            case "2_10_f": return "https://od.lk/s/NjJfNTY1MTY1M18/2_10_f.mp3";
+//            case "2_11_f": return "https://od.lk/s/NjJfNTY1MTY1NV8/2_11_f.mp3";
+//            case "2_12_f": return "https://od.lk/s/NjJfNTY1MTY1N18/2_12_f.mp3";
+//            case "2_13_f": return "https://od.lk/s/NjJfNTY1MTY1OV8/2_13_f.mp3";
+//            case "2_14_f": return "https://od.lk/s/NjJfNTY1MTY2MV8/2_14_f.mp3";
+//            case "2_15_f": return "https://od.lk/s/NjJfNTY1MTY3M18/2_15_f.mp3";
+//            case "2_16_f": return "https://od.lk/s/NjJfNTY1MTY3NV8/2_16_f.mp3";
+//            case "2_17_f": return "https://od.lk/s/NjJfNTY1MTY3N18/2_17_f.mp3";
+//            case "2_18_f": return "https://od.lk/s/NjJfNTY1MTY3OV8/2_18_f.mp3";
+//            case "2_19_f": return "https://od.lk/s/NjJfNTY1MTY4MV8/2_19_f.mp3";
+//            case "2_20_f": return "https://od.lk/s/NjJfNTY1MTY4M18/2_20_f.mp3";
+//            case "2_21_f": return "https://od.lk/s/NjJfNTY1MTY4NV8/2_21_f.mp3";
+//            case "2_22_f": return "https://od.lk/s/NjJfNTY1MTY4OF8/2_22_f.mp3";
+//            case "2_23_f": return "https://od.lk/s/NjJfNTY1MTY5Ml8/2_23_f.mp3";
+//            case "2_24_f": return "https://od.lk/s/NjJfNTY1MTY3MF8/2_24_f.mp3";
+//            //Prelude
+//            case "2_1_p": return "https://od.lk/s/NjJfNTY1MTkwN18/2_01_p.mp3";
+//            case "2_2_p": return "https://od.lk/s/NjJfNTY1MTkwOV8/2_02_p.mp3";
+//            case "2_3_p": return "https://od.lk/s/NjJfNTY1MTkxMV8/2_03_p.mp3";
+//            case "2_4_p": return "https://od.lk/s/NjJfNTY1MTkxM18/2_04_p.mp3";
+//            case "2_5_p": return "https://od.lk/s/NjJfNTY1MTkxNV8/2_05_p.mp3";
+//            case "2_6_p": return "https://od.lk/s/NjJfNTY1MTkxN18/2_06_p.mp3";
+//            case "2_7_p": return "https://od.lk/s/NjJfNTY1MTY0N18/2_07_p.mp3";
+//            case "2_8_p": return "https://od.lk/s/NjJfNTY1MTY1MF8/2_08_p.mp3";
+//            case "2_9_p": return "https://od.lk/s/NjJfNTY1MTY1Ml8/2_09_p.mp3";
+//            case "2_10_p": return "https://od.lk/s/NjJfNTY1MTY1NF8/2_10_p.mp3";
+//            case "2_11_p": return "https://od.lk/s/NjJfNTY1MTY1Nl8/2_11_p.mp3";
+//            case "2_12_p": return "https://od.lk/s/NjJfNTY1MTY1OF8/2_12_p.mp3";
+//            case "2_13_p": return "https://od.lk/s/NjJfNTY1MTY2MF8/2_13_p.mp3";
+//            case "2_14_p": return "https://od.lk/s/NjJfNTY1MTY3Ml8/2_14_p.mp3";
+//            case "2_15_p": return "https://od.lk/s/NjJfNTY1MTY3NF8/2_15_p.mp3";
+//            case "2_16_p": return "https://od.lk/s/NjJfNTY1MTY3Nl8/2_16_p.mp3";
+//            case "2_17_p": return "https://od.lk/s/NjJfNTY1MTY3OF8/2_17_p.mp3";
+//            case "2_18_p": return "https://od.lk/s/NjJfNTY1MTY4MF8/2_18_p.mp3";
+//            case "2_19_p": return "https://od.lk/s/NjJfNTY1MTY4Ml8/2_19_p.mp3";
+//            case "2_20_p": return "https://od.lk/s/NjJfNTY1MTY4NF8/2_20_p.mp3";
+//            case "2_21_p": return "https://od.lk/s/NjJfNTY1MTY4N18/2_21_p.mp3";
+//            case "2_22_p": return "https://od.lk/s/NjJfNTY1MTY5MF8/2_22_p.mp3";
+//            case "2_23_p": return "https://od.lk/s/NjJfNTY1MTY5M18/2_23_p.mp3";
+//            case "2_24_p": return "https://od.lk/s/NjJfNTY1MTY3MV8/2_24_p.mp3";
+//
+//        }
+//
+//        return "https://od.lk/s/NjJfNTY1MDc3Ml8/1_1_f.mp3";
     }
 
     @Override
